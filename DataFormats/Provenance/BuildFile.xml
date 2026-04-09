@@ -1,8 +1,0 @@
-<use name="FWCore/Utilities"/>
-<use name="FWCore/Reflection"/>
-<use name="boost_header"/>
-<use name="tbb"/>
-<use name="rootcling"/>
-<export>
-  <lib name="1"/>
-</export>

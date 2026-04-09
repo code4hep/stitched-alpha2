@@ -1,0 +1,57 @@
+#!/bin/tcsh
+# Stitched Framework Environment Setup Script (csh/tcsh)
+# Source this file to set up your environment to use Stitched
+
+# Stitched installation directories
+setenv STITCHED_BASE "@CMAKE_INSTALL_PREFIX@"
+setenv STITCHED_LIB "${STITCHED_BASE}/@CMAKE_INSTALL_LIBDIR@"
+setenv STITCHED_BIN "${STITCHED_BASE}/@CMAKE_INSTALL_BINDIR@"
+setenv STITCHED_PYTHON "${STITCHED_BASE}/python"
+
+# External package root directories
+#  This helps projects calling find_package(Stitched) find the extrnals
+setenv TBB_ROOT "@STITCHED_TBB_ROOT@"
+setenv BOOST_ROOT "@STITCHED_BOOST_ROOT@"
+setenv ROOT_DIR "@STITCHED_ROOT_DIR@"
+setenv MD5_ROOT "@STITCHED_MD5_ROOT@"
+setenv CLHEP_ROOT "@STITCHED_CLHEP_ROOT@"
+
+# Add Stitched libraries to LD_LIBRARY_PATH
+if ( ! $?LD_LIBRARY_PATH ) then
+    setenv LD_LIBRARY_PATH "${STITCHED_LIB}"
+else
+    setenv LD_LIBRARY_PATH "${STITCHED_LIB}:${LD_LIBRARY_PATH}"
+endif
+
+# Add Stitched Python and library directories to PYTHONPATH
+if ( ! $?PYTHONPATH ) then
+    setenv PYTHONPATH "${STITCHED_PYTHON}:${STITCHED_LIB}"
+else
+    setenv PYTHONPATH "${STITCHED_PYTHON}:${STITCHED_LIB}:${PYTHONPATH}"
+endif
+
+# Add Stitched binaries to PATH
+if ( ! $?PATH ) then
+    setenv PATH "${STITCHED_BIN}"
+else
+    setenv PATH "${STITCHED_BIN}:${PATH}"
+endif
+
+# Add Python binaries to PATH
+set PYTHON_BIN="@STITCHED_PYTHON_BIN@"
+if ( "${PYTHON_BIN}" != "" ) then
+    setenv PATH "${PYTHON_BIN}:${PATH}"
+endif
+
+# External library paths
+set EXTERNAL_LIB_PATHS="@EXTERNAL_LIB_PATHS@"
+if ( "${EXTERNAL_LIB_PATHS}" != "" ) then
+    setenv LD_LIBRARY_PATH "${EXTERNAL_LIB_PATHS}:${LD_LIBRARY_PATH}"
+endif
+
+echo "Stitched environment configured:"
+echo "  STITCHED_BASE: ${STITCHED_BASE}"
+echo "  Libraries in LD_LIBRARY_PATH"
+echo "  Python modules in PYTHONPATH"
+echo "  Executables in PATH"
+echo "  External package roots: TBB_ROOT, BOOST_ROOT, ROOT_DIR, MD5_ROOT, CLHEP_ROOT"

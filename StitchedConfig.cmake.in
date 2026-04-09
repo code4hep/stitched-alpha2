@@ -1,0 +1,102 @@
+@PACKAGE_INIT@
+
+# StitchedConfig.cmake
+# Configuration file for the Stitched package
+
+# Include helper for finding dependencies
+include(CMakeFindDependencyMacro)
+
+# Compute paths
+get_filename_component(Stitched_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# Add CMake module path for custom Find modules
+list(APPEND CMAKE_MODULE_PATH "${Stitched_CMAKE_DIR}")
+
+# Find all required dependencies that Stitched targets link against
+# These must be found before including CMSSSWTargets.cmake
+
+# Find Threads
+find_dependency(Threads REQUIRED)
+
+# Find Boost
+find_dependency(Boost REQUIRED COMPONENTS program_options)
+
+# Find TBB
+find_dependency(TBB REQUIRED)
+
+# Find ROOT
+find_dependency(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree)
+
+# Find custom dependencies using our Find modules
+#find_dependency(tinyxml2 REQUIRED) #not needed since is PRIVATE dependency
+find_dependency(c4h_md5 REQUIRED)
+find_dependency(CLHEP REQUIRED)
+find_dependency(pybind11 REQUIRED)
+
+# Find Python3 (needed publicly by FWCore/PythonParameterSet and
+# FWCore/ParameterSetReader)
+find_dependency(Python3 REQUIRED COMPONENTS Interpreter Development)
+
+# Include the targets file
+include("${Stitched_CMAKE_DIR}/StitchedTargets.cmake")
+
+# Include Stitched macros and utility functions
+# StitchedMacros.cmake includes the path to edmWriteConfigs
+include("${Stitched_CMAKE_DIR}/StitchedMacros.cmake")
+
+# Set variables for compatibility
+set(Stitched_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set(Stitched_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
+
+# Provide a list of available libraries/components, using the exported
+# Stitched:: target names (see StitchedTargets.cmake) so this list can be
+# passed directly to target_link_libraries() by consumers.
+# Note: Dictionary-only libraries are not included here because no
+# consumer should link against them. They are still exported as
+# targets (see StitchedTargets.cmake) for completeness.
+set(Stitched_LIBRARIES
+    Stitched::FWCore_Utilities
+    Stitched::FWCore_PluginManager
+    Stitched::FWCore_Reflection
+    Stitched::FWCore_Version
+    Stitched::FWCore_ParameterSet
+    Stitched::FWCore_ParameterSetReader
+    Stitched::FWCore_PythonParameterSet
+    Stitched::FWCore_ServiceRegistry
+    Stitched::FWCore_MessageLogger
+    Stitched::FWCore_MessageService
+    Stitched::FWCore_AbstractServices
+    Stitched::FWCore_Concurrency
+    Stitched::FWCore_SharedMemory
+    Stitched::FWCore_Common
+    Stitched::FWCore_Framework
+    Stitched::FWCore_Sources
+    Stitched::FWCore_PythonFramework
+    Stitched::FWCore_TestProcessor
+    Stitched::FWCore_Services
+    Stitched::FWCore_Integration
+    Stitched::DataFormats_Common
+    Stitched::DataFormats_Provenance
+    Stitched::DataFormats_TestObjects
+)
+
+# Check if requested components are available
+if(Stitched_FIND_COMPONENTS)
+    foreach(comp ${Stitched_FIND_COMPONENTS})
+        if(NOT TARGET ${comp})
+            if(Stitched_FIND_REQUIRED_${comp})
+                message(FATAL_ERROR "Stitched component ${comp} not found")
+            else()
+                message(WARNING "Stitched component ${comp} not found")
+            endif()
+            set(Stitched_${comp}_FOUND FALSE)
+        else()
+            set(Stitched_${comp}_FOUND TRUE)
+        endif()
+    endforeach()
+endif()
+
+check_required_components(Stitched)
+
+# Provide helpful information
+message(STATUS "Found Stitched: ${Stitched_CMAKE_DIR}")
