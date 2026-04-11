@@ -1,5 +1,5 @@
-# CMSSSWConfigVersion.cmake
-# Version information for CMSSW package
+# StitchedConfigVersion.cmake
+# Version information for Stitched package
 
 set(PACKAGE_VERSION "@PROJECT_VERSION@")
 

@@ -1,23 +1,54 @@
 @PACKAGE_INIT@
 
-# CMSSWConfig.cmake
-# Configuration file for the CMSSW package
+# StitchedConfig.cmake
+# Configuration file for the Stitched package
+
+# Include helper for finding dependencies
+include(CMakeFindDependencyMacro)
 
 # Compute paths
-get_filename_component(CMSSW_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(Stitched_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+# Add CMake module path for custom Find modules
+list(APPEND CMAKE_MODULE_PATH "${Stitched_CMAKE_DIR}")
+
+# Find all required dependencies that Stitched targets link against
+# These must be found before including CMSSSWTargets.cmake
+
+# Find Threads
+find_dependency(Threads REQUIRED)
+
+# Find Boost
+find_dependency(Boost REQUIRED COMPONENTS program_options filesystem serialization)
+
+# Find TBB
+find_dependency(TBB REQUIRED)
+
+# Find ROOT
+find_dependency(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree)
+
+# Find custom dependencies using our Find modules
+find_dependency(tinyxml2 REQUIRED)
+find_dependency(MD5 REQUIRED)
+find_dependency(CLHEP REQUIRED)
+find_dependency(pybind11 REQUIRED)
+
+# Note: Python3, cpu_features and other dependencies may need to be found
+# by the consuming project if they're used directly
 
 # Include the targets file
-include("${CMSSW_CMAKE_DIR}/CMSSSWTargets.cmake")
+include("${Stitched_CMAKE_DIR}/StitchedTargets.cmake")
 
-# Include CMSSW macros and utility functions
-include("${CMSSW_CMAKE_DIR}/CMSSSWMacros.cmake")
+# Include Stitched macros and utility functions
+# StitchedMacros.cmake includes the path to edmWriteConfigs
+include("${Stitched_CMAKE_DIR}/StitchedMacros.cmake")
 
 # Set variables for compatibility
-set(CMSSW_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
-set(CMSSW_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
+set(Stitched_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+set(Stitched_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
 
 # Provide a list of available libraries/components
-set(CMSSW_LIBRARIES
+set(Stitched_LIBRARIES
     FWCoreUtilities
     FWCorePluginManager
     FWCoreReflection
@@ -41,26 +72,25 @@ set(CMSSW_LIBRARIES
     DataFormatsCommon
     DataFormatsProvenance
     DataFormatsTestObjects
-    SimDataFormatsRandomEngine
 )
 
 # Check if requested components are available
-if(CMSSW_FIND_COMPONENTS)
-    foreach(comp ${CMSSW_FIND_COMPONENTS})
+if(Stitched_FIND_COMPONENTS)
+    foreach(comp ${Stitched_FIND_COMPONENTS})
         if(NOT TARGET ${comp})
-            if(CMSSW_FIND_REQUIRED_${comp})
-                message(FATAL_ERROR "CMSSW component ${comp} not found")
+            if(Stitched_FIND_REQUIRED_${comp})
+                message(FATAL_ERROR "Stitched component ${comp} not found")
             else()
-                message(WARNING "CMSSW component ${comp} not found")
+                message(WARNING "Stitched component ${comp} not found")
             endif()
-            set(CMSSW_${comp}_FOUND FALSE)
+            set(Stitched_${comp}_FOUND FALSE)
         else()
-            set(CMSSW_${comp}_FOUND TRUE)
+            set(Stitched_${comp}_FOUND TRUE)
         endif()
     endforeach()
 endif()
 
-check_required_components(CMSSW)
+check_required_components(Stitched)
 
 # Provide helpful information
-message(STATUS "Found CMSSW: ${CMSSW_CMAKE_DIR}")
+message(STATUS "Found Stitched: ${Stitched_CMAKE_DIR}")

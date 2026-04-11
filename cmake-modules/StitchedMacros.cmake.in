@@ -1,6 +1,10 @@
 # StitchedMacros.cmake
 # Utility functions for Stitched projects
 
+# Path to Stitched executables (edmWriteConfigs, edmPluginRefresh, etc.)
+# This is configured at CMake time for build or install
+set(STITCHED_EXECUTABLES_DIR "@STITCHED_EXECUTABLES_DIR@")
+
 #[=======================================================================[.rst:
 stitched_generate_plugin
 ---------------------
@@ -91,15 +95,23 @@ function(stitched_generate_plugin)
 
     # Set the plugin prefix
     set_target_properties(${PLUGIN_TARGET} PROPERTIES PREFIX "edmplugin")
+    
+    # If edmWriteConfigs is a target (building Stitched), add it as a dependency
+    # to ensure it's built before we try to run it
+    if(TARGET edmWriteConfigs)
+        add_dependencies(${PLUGIN_TARGET} edmWriteConfigs)
+    endif()
 
     # Calculate relative Python path for this package
     file(RELATIVE_PATH PKG_PYTHON_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
+    # Ensure the Python output directory exists
+    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH})
+
     # Run edmWriteConfigs to generate Python configuration for this plugin library
     # The POST_BUILD command ensures this runs after the plugin is built
-    # CMake will ensure edmWriteConfigs is built before this command runs
     add_custom_command(TARGET ${PLUGIN_TARGET} POST_BUILD
-        COMMAND ${CMAKE_BINARY_DIR}/bin/edmWriteConfigs -p $<TARGET_FILE:${PLUGIN_TARGET}>
+        COMMAND ${STITCHED_EXECUTABLES_DIR}/edmWriteConfigs -p $<TARGET_FILE:${PLUGIN_TARGET}>
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
         COMMENT "Generating Python configs for ${PLUGIN_TARGET}"
     )
@@ -118,7 +130,7 @@ function(stitched_generate_plugin)
                 PATTERN "*.pyc" EXCLUDE)
         
     endif()
-        # Also copy the modules.py template if available
+    # Also copy the modules.py template if available
     if(EXISTS ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py)
         file(COPY ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py
                 DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH})
@@ -203,7 +215,13 @@ function(stitched_generate_plugincache)
 
     # Build the command arguments and dependencies lists
     set(PLUGIN_COMMAND_ARGS "")
-    set(PLUGIN_DEPENDS "edmPluginRefresh")
+    set(PLUGIN_DEPENDS "")
+    
+    # Only add edmPluginRefresh as a dependency if it's a target (during Stitched build)
+    # When using installed Stitched, edmPluginRefresh is an executable, not a target
+    if(TARGET edmPluginRefresh)
+        list(APPEND PLUGIN_DEPENDS edmPluginRefresh)
+    endif()
 
     foreach(plugin_target ${CACHE_PLUGIN_TARGETS})
         # Add target file to command arguments (only if target exists)
@@ -218,7 +236,7 @@ function(stitched_generate_plugincache)
     # Create custom command to generate the plugin cache
     add_custom_command(
         OUTPUT "${CACHE_OUTPUT_DIR}/.edmplugincache"
-        COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/edmPluginRefresh ${PLUGIN_COMMAND_ARGS}
+        COMMAND ${STITCHED_EXECUTABLES_DIR}/edmPluginRefresh ${PLUGIN_COMMAND_ARGS}
         DEPENDS ${PLUGIN_DEPENDS}
         COMMENT "Refreshing plugin cache for edmplugin libraries"
         VERBATIM

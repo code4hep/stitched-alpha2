@@ -18,6 +18,7 @@ target_link_libraries(FWCoreParameterSet
         FWCoreUtilities
         Boost::boost
         TBB::tbb
+    PRIVATE
         Python3::Python
 )
 

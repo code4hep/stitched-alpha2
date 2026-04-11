@@ -13,7 +13,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
 
-# Include Stitched utility macros
+# Configure StitchedMacros.cmake for the build tree
+# During build, edmWriteConfigs is in CMAKE_RUNTIME_OUTPUT_DIRECTORY
+set(STITCHED_EXECUTABLES_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/StitchedMacros.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake-modules/StitchedMacros.cmake
+    @ONLY
+)
+
+# Include Stitched utility macros (build tree version)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}/cmake-modules")
 include(StitchedMacros)
 
 find_package(Boost REQUIRED COMPONENTS program_options filesystem serialization)
@@ -169,6 +179,15 @@ install(EXPORT StitchedTargets
     DESTINATION ${CONFIG_INSTALL_DIR}
 )
 
+# Configure StitchedMacros.cmake for the install tree
+# When installed, edmWriteConfigs will be in ${CMAKE_INSTALL_PREFIX}/bin
+set(STITCHED_EXECUTABLES_DIR "${CMAKE_INSTALL_PREFIX}/bin")
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/StitchedMacros.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake-modules-install/StitchedMacros.cmake
+    @ONLY
+)
+
 # Configure and install package config files
 configure_package_config_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/StitchedConfig.cmake.in
@@ -186,7 +205,8 @@ write_basic_package_version_file(
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/StitchedConfig.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/StitchedConfigVersion.cmake
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/StitchedMacros.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/cmake-modules-install/StitchedMacros.cmake
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/FindMD5.cmake
     DESTINATION ${CONFIG_INSTALL_DIR}
 )
 
