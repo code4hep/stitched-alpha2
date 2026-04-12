@@ -19,7 +19,6 @@ target_link_libraries(FWCoreServices
         DataFormatsProvenance
         FWCoreUtilities
         Boost::boost
-        tinyxml2
         CLHEP::CLHEP
         CpuFeatures::cpu_features
         ROOT::Tree

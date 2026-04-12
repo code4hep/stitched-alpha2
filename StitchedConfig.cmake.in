@@ -28,10 +28,10 @@ find_dependency(TBB REQUIRED)
 find_dependency(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree)
 
 # Find custom dependencies using our Find modules
-find_dependency(tinyxml2 REQUIRED)
+#find_dependency(tinyxml2 REQUIRED) #not needed since is PRIVATE dependency
 find_dependency(MD5 REQUIRED)
 find_dependency(CLHEP REQUIRED)
-find_dependency(pybind11 REQUIRED)
+#find_dependency(pybind11 REQUIRED) # not needed since is PRIVATE dependency
 
 # Note: Python3, cpu_features and other dependencies may need to be found
 # by the consuming project if they're used directly
