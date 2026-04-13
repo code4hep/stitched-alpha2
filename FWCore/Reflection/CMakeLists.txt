@@ -1,13 +1,14 @@
 # FWCore/Reflection library
 file(GLOB SOURCES src/*.cc)
+file(GLOB HEADERS interface/*.h)
 
 add_library(FWCoreReflection SHARED ${SOURCES})
 
-target_include_directories(FWCoreReflection
+target_sources(FWCoreReflection
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}
+        FILES ${HEADERS}
 )
 
 target_link_libraries(FWCoreReflection

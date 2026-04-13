@@ -1,7 +1,6 @@
 # DataFormats/StdDictionaries library
 # This package contains ROOT dictionary definitions
 
-
 add_library(DataFormatsStdDictionaries_map SHARED)
 # Generate dictionary
 root_generate_dictionary(DataFormatsStdDictionaries_map_dict
@@ -9,13 +8,6 @@ root_generate_dictionary(DataFormatsStdDictionaries_map_dict
     LINKDEF src/classes_def_map.xml
     MODULE DataFormatsStdDictionaries_map
     OPTIONS --reflex
-)
-
-target_include_directories(DataFormatsStdDictionaries_map
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries(DataFormatsStdDictionaries_map PUBLIC ROOT::Core)
@@ -34,12 +26,6 @@ root_generate_dictionary(DataFormatsStdDictionaries_others_dict
     OPTIONS --reflex
 )
 
-target_include_directories(DataFormatsStdDictionaries_others
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
 
 target_link_libraries(DataFormatsStdDictionaries_others PUBLIC ROOT::Core)
 
@@ -56,12 +42,6 @@ root_generate_dictionary(DataFormatsStdDictionaries_pair_dict
     OPTIONS --reflex
 )
 
-target_include_directories(DataFormatsStdDictionaries_pair
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
 
 target_link_libraries(DataFormatsStdDictionaries_pair PUBLIC ROOT::Core)
 
@@ -78,12 +58,6 @@ root_generate_dictionary(DataFormatsStdDictionaries_vector_dict
     OPTIONS --reflex
 )
 
-target_include_directories(DataFormatsStdDictionaries_vector
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
 
 target_link_libraries(DataFormatsStdDictionaries_vector PUBLIC ROOT::Core)
 

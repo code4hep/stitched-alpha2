@@ -7,6 +7,7 @@ endif()
 
 add_library(FWCorePythonFramework SHARED ${SOURCES})
 
+#can't use target_sources as need access to headers in other targets of this project
 target_include_directories(FWCorePythonFramework
     PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>

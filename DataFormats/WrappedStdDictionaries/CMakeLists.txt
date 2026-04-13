@@ -12,12 +12,6 @@ root_generate_dictionary(DataFormatsWrappedStdDictionaries_dict
     OPTIONS --reflex
 )
 
-target_include_directories(DataFormatsWrappedStdDictionaries
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
 
 target_link_libraries(DataFormatsWrappedStdDictionaries
     PUBLIC

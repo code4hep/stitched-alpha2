@@ -1,5 +1,6 @@
 # FWCore/Common library
 file(GLOB SOURCES src/*.cc)
+file(GLOB HEADERS interface/*.h)
 
 add_library(FWCoreCommon SHARED ${SOURCES})
 
@@ -11,11 +12,11 @@ root_generate_dictionary(FWCoreCommon_dict
     OPTIONS --reflex
 )
 
-target_include_directories(FWCoreCommon
+target_sources(FWCoreCommon
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}
+        FILES ${HEADERS}
 )
 
 target_link_libraries(FWCoreCommon

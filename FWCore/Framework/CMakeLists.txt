@@ -1,13 +1,14 @@
 # FWCore/Framework library
 file(GLOB SOURCES src/*.cc src/global/*.cc src/limited/*.cc src/one/*.cc src/stream/*.cc)
+file(GLOB HEADERS interface/*.h interface/*.icc interface/*/*.h)
 
 add_library(FWCoreFramework SHARED ${SOURCES})
 
-target_include_directories(FWCoreFramework
+target_sources(FWCoreFramework
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}
+        FILES ${HEADERS}
 )
 
 target_link_libraries(FWCoreFramework

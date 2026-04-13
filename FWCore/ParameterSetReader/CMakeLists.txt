@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 
 add_library(FWCoreParameterSetReader SHARED ${SOURCES})
 
+#can't use target_sources as headers needed for other targets in this project
 target_include_directories(FWCoreParameterSetReader
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...4.0)
+cmake_minimum_required(VERSION 3.23...4.0)
 
 project(Stitched VERSION 1.0.0 LANGUAGES CXX)
 
@@ -131,7 +131,7 @@ foreach(target ${Stitched_EXPORT_TARGETS})
             LIBRARY DESTINATION ${LIB_INSTALL_DIR}
             ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
             RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-            INCLUDES DESTINATION ${INCLUDE_INSTALL_DIR}
+            FILE_SET HEADERS
         )
     endif()
 endforeach()
@@ -154,19 +154,7 @@ foreach(exec ${Stitched_EXECUTABLES})
     endif()
 endforeach()
 
-# Install header files
-# Install all interface directories maintaining the package structure
-install(DIRECTORY DataFormats/
-    DESTINATION ${INCLUDE_INSTALL_DIR}/DataFormats
-    FILES_MATCHING
-    REGEX "/interface/"
-)
-
-install(DIRECTORY FWCore/
-    DESTINATION ${INCLUDE_INSTALL_DIR}/FWCore
-    FILES_MATCHING
-    REGEX "/interface/"
-)
+# Note: Header files are now installed via target_sources FILE_SET in individual CMakeLists.txt files
 
 # install python
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python

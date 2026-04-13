@@ -1,5 +1,6 @@
 # DataFormats/Provenance library
 file(GLOB SOURCES src/*.cc)
+file(GLOB HEADERS interface/*.h)
 
 add_library(DataFormatsProvenance SHARED ${SOURCES})
 
@@ -11,11 +12,11 @@ root_generate_dictionary(DataFormatsProvenance_dict
     OPTIONS --reflex
 )
 
-target_include_directories(DataFormatsProvenance
+target_sources(DataFormatsProvenance
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}
+        FILES ${HEADERS}
 )
 
 target_link_libraries(DataFormatsProvenance

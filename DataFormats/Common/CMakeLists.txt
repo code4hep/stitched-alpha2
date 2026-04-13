@@ -1,5 +1,6 @@
 # DataFormats/Common library
 file(GLOB SOURCES src/*.cc)
+file(GLOB HEADERS interface/*.h interface/*.icc)
 
 add_library(DataFormatsCommon SHARED ${SOURCES})
 
@@ -12,11 +13,12 @@ root_generate_dictionary(DataFormatsCommon_dict
     OPTIONS --reflex
 )
 
-target_include_directories(DataFormatsCommon
+# Associate headers with the target using FILE_SET
+target_sources(DataFormatsCommon
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}
+        FILES ${HEADERS}
 )
 
 target_link_libraries(DataFormatsCommon
