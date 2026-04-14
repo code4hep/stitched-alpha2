@@ -4,6 +4,7 @@
 # Path to Stitched executables (edmWriteConfigs, edmPluginRefresh, etc.)
 # This is configured at CMake time for build or install
 set(STITCHED_EXECUTABLES_DIR "@STITCHED_EXECUTABLES_DIR@")
+set(STITCHED_INCLUDES_DIR "@STITCHED_INCLUDES_DIR@")
 
 #[=======================================================================[.rst:
 stitched_generate_plugin
@@ -131,14 +132,16 @@ function(stitched_generate_plugin)
         
     endif()
     # Also copy the modules.py template if available
-    if(EXISTS ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py)
-        file(COPY ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py
+    if(EXISTS ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py)
+        file(COPY ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py
                 DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH})
     endif()
     # Install modules.py template if available
-    if(EXISTS ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py)
-        install(FILES ${CMAKE_SOURCE_DIR}/FWCore/ParameterSet/templates/modules.py
+    if(EXISTS ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py)
+        install(FILES ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py
                 DESTINATION python/${PKG_PYTHON_PATH})
+    else()
+      message(FATAL_ERROR "failed to find ${STITCHED_INCLUDES_DIR}")
     endif()
 
 endfunction()

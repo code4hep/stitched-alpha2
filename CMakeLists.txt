@@ -16,6 +16,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
 # Configure StitchedMacros.cmake for the build tree
 # During build, edmWriteConfigs is in CMAKE_RUNTIME_OUTPUT_DIRECTORY
 set(STITCHED_EXECUTABLES_DIR "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+set(STITCHED_INCLUDES_DIR ${CMAKE_SOURCE_DIR})
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/StitchedMacros.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/cmake-modules/StitchedMacros.cmake
@@ -172,6 +173,7 @@ install(EXPORT StitchedTargets
 # Configure StitchedMacros.cmake for the install tree
 # When installed, edmWriteConfigs will be in ${CMAKE_INSTALL_PREFIX}/bin
 set(STITCHED_EXECUTABLES_DIR "${CMAKE_INSTALL_PREFIX}/bin")
+set(STITCHED_INCLUDES_DIR "${CMAKE_INSTALL_PREFIX}/include")
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/StitchedMacros.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/cmake-modules-install/StitchedMacros.cmake

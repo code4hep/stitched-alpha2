@@ -1,6 +1,7 @@
 # FWCore/ParameterSet library
 file(GLOB SOURCES src/*.cc)
-file(GLOB HEADERS interface/*.h)
+file(GLOB HEADERS "interface/*.h" "templates/*.py")
+
 
 add_library(FWCoreParameterSet SHARED ${SOURCES})
 
