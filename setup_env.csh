@@ -27,8 +27,8 @@ setenv LD_LIBRARY_PATH "${ROOT_DIR}/lib:${LD_LIBRARY_PATH}"
 setenv PATH "${ROOT_DIR}/bin:${PATH}"
 
 # MD5
-setenv MD5_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/md5/1.0.0-26057075013e190e56dad37d35219376"
-setenv LD_LIBRARY_PATH "${MD5_ROOT}/lib:${LD_LIBRARY_PATH}"
+setenv C4H_MD5_ROOT "/uscms_data/d2/cdj/build/temp/muonCollider/external/"
+setenv LD_LIBRARY_PATH "${C4H_MD5_ROOT}/lib64:${LD_LIBRARY_PATH}"
 
 # TinyXML2
 setenv TINYXML2_ROOT "/cvmfs/cms.cern.ch/el8_amd64_gcc13/external/tinyxml2/6.2.0-67924ead96ecb4e69aad321b767979a5"

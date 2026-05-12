@@ -41,7 +41,7 @@ add_lib_dir_from_target(Boost::filesystem)
 add_lib_dir_from_target(TBB::tbb)
 add_lib_dir_from_target(ROOT::Core)
 add_lib_dir_from_target(tinyxml2)
-add_lib_dir_from_target(MD5::md5)
+add_lib_dir_from_target(c4h_md5::c4h_md5)
 add_lib_dir_from_target(CLHEP::CLHEP)
 add_lib_dir_from_target(CpuFeatures::cpu_features)
 

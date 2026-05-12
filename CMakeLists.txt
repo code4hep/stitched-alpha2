@@ -33,7 +33,7 @@ find_package(Threads REQUIRED)
 find_package(TBB REQUIRED)
 find_package(Python3 COMPONENTS Interpreter Development)
 find_package(tinyxml2 REQUIRED)
-find_package(MD5 REQUIRED)
+find_package(c4h_md5 REQUIRED)
 find_package(CLHEP REQUIRED)
 find_package(pybind11 REQUIRED)
 find_package(CpuFeatures REQUIRED)
@@ -198,7 +198,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/StitchedConfig.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/StitchedConfigVersion.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/cmake-modules-install/StitchedMacros.cmake
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/FindMD5.cmake
     DESTINATION ${CONFIG_INSTALL_DIR}
 )
 

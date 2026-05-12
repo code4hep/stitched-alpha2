@@ -17,7 +17,7 @@ target_link_libraries(FWCoreUtilities
         Boost::boost
         TBB::tbb
         Threads::Threads
-        MD5::md5
+        c4h_md5::c4h_md5
 )
 
 # Try to link UUID if available
