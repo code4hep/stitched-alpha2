@@ -41,6 +41,10 @@ find_package(CpuFeatures REQUIRED)
 get_target_property(CPU_INCLUDES CpuFeatures::cpu_features INTERFACE_INCLUDE_DIRECTORIES)
 set_target_properties(CpuFeatures::cpu_features PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CPU_INCLUDES};${CPU_INCLUDES}/..")
 
+# Find UUID
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(UUID REQUIRED IMPORTED_TARGET uuid)
+
 # Find ROOT
 find_package(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree)
 message(STATUS "Found ROOT: ${ROOT_VERSION} at ${ROOT_DIR}")
