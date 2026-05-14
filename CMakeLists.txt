@@ -60,7 +60,12 @@ include(GNUInstallDirs)
 
 # Add compile options
 add_compile_options(-Wall -Werror=return-type -Wno-attributes -DPROJECT_VERSION="1_0_0" -DCMS_MICRO_ARCH="UNKNOWN")
-add_link_options(LINKER:-z,defs)
+# -z defs makes the linker reject shared libraries with undefined symbols.
+# On macOS, Apple ld does not support -z; undefined-symbol rejection is
+# controlled via -undefined error, which is already the default for dylibs.
+if(NOT APPLE)
+    add_link_options(LINKER:-z,defs)
+endif()
 
 # Add subdirectories
 add_subdirectory(DataFormats)
