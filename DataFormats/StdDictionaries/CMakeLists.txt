@@ -3,7 +3,7 @@
 
 add_library(DataFormatsStdDictionaries_map SHARED)
 # Generate dictionary
-root_generate_dictionary(DataFormatsStdDictionaries_map_dict
+stitched_generate_dictionary(DataFormatsStdDictionaries_map_dict
     src/classes_map.h
     LINKDEF src/classes_def_map.xml
     MODULE DataFormatsStdDictionaries_map
@@ -19,7 +19,7 @@ set_target_properties(DataFormatsStdDictionaries_map PROPERTIES
 
 add_library(DataFormatsStdDictionaries_others SHARED)
 # Generate dictionary
-root_generate_dictionary(DataFormatsStdDictionaries_others_dict
+stitched_generate_dictionary(DataFormatsStdDictionaries_others_dict
     src/classes_others.h
     LINKDEF src/classes_def_others.xml
     MODULE DataFormatsStdDictionaries_others
@@ -35,7 +35,7 @@ set_target_properties(DataFormatsStdDictionaries_others PROPERTIES
 )
 add_library(DataFormatsStdDictionaries_pair SHARED)
 # Generate dictionary
-root_generate_dictionary(DataFormatsStdDictionaries_pair_dict
+stitched_generate_dictionary(DataFormatsStdDictionaries_pair_dict
     src/classes_pair.h
     LINKDEF src/classes_def_pair.xml
     MODULE DataFormatsStdDictionaries_pair
@@ -51,7 +51,7 @@ set_target_properties(DataFormatsStdDictionaries_pair PROPERTIES
 )
 add_library(DataFormatsStdDictionaries_vector SHARED)
 # Generate dictionary
-root_generate_dictionary(DataFormatsStdDictionaries_vector_dict
+stitched_generate_dictionary(DataFormatsStdDictionaries_vector_dict
     src/classes_vector.h
     LINKDEF src/classes_def_vector.xml
     MODULE DataFormatsStdDictionaries_vector

@@ -1,6 +1,42 @@
 # StitchedMacros.cmake
 # Utility functions for Stitched projects
 
+#[=======================================================================[.rst:
+stitched_generate_dictionary
+----------------------------
+
+Thin wrapper around ROOT's ``root_generate_dictionary`` that suppresses
+compiler warnings on the generated dictionary source file.  rootcling-
+generated code routinely triggers ``-Wunused-variable`` (and related)
+warnings that are not actionable; silencing them here keeps ``-Wall``
+clean without touching every call site.
+
+Usage is identical to ``root_generate_dictionary``::
+
+  stitched_generate_dictionary(<DictName>
+      [<header> ...]
+      LINKDEF <linkdef>
+      MODULE  <target>
+      [OPTIONS ...]
+  )
+
+#]=======================================================================]
+macro(stitched_generate_dictionary DICT_NAME)
+    # Delegate all arguments verbatim to the ROOT macro.
+    root_generate_dictionary(${DICT_NAME} ${ARGN})
+
+    # ROOT generates the source as <DictName>.cxx in CMAKE_CURRENT_BINARY_DIR.
+    set(_dict_src "${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx")
+
+    # Suppress warnings that are endemic to rootcling-generated code and are
+    # not actionable (unused shadow variables, ignored attributes, etc.).
+    set_source_files_properties("${_dict_src}" PROPERTIES
+        COMPILE_OPTIONS "-Wno-unused-variable;-Wno-unused-parameter;-Wno-shadow;-Wno-attributes"
+    )
+
+    unset(_dict_src)
+endmacro()
+
 # Path to Stitched executables (edmWriteConfigs, edmPluginRefresh, etc.)
 # This is configured at CMake time for build or install
 set(STITCHED_EXECUTABLES_DIR "@STITCHED_EXECUTABLES_DIR@")

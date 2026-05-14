@@ -5,7 +5,7 @@ add_library(DataFormatsWrappedStdDictionaries SHARED)
 
 # Generate dictionary
 set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> )
-root_generate_dictionary(DataFormatsWrappedStdDictionaries_dict
+stitched_generate_dictionary(DataFormatsWrappedStdDictionaries_dict
     ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
     LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
     MODULE DataFormatsWrappedStdDictionaries
