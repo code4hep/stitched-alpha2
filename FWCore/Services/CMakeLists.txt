@@ -24,7 +24,11 @@ target_link_libraries(stitched_FWCore_Services
         CpuFeatures::cpu_features
         ROOT::Tree
         ROOT::Hist
-        atomic
+        # libatomic is a GCC runtime library providing software fallbacks for
+        # architectures without native atomic instructions.  It does not exist
+        # on macOS: Apple's toolchain implements atomics via compiler builtins
+        # and hardware instructions with no separate library required.
+        $<$<NOT:$<PLATFORM_ID:Darwin>>:atomic>
 )
 
 set_target_properties(stitched_FWCore_Services PROPERTIES
