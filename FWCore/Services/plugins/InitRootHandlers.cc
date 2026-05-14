@@ -788,7 +788,10 @@ namespace edm {
 #ifdef __linux__
       syscall(SYS_execve, "/bin/sh", argv, environ);
 #else
-      execv("/bin/sh", argv);
+      // execv() is declared as execv(const char*, char* const*) on macOS —
+      // missing the const on the pointee, a well-known POSIX historical wart.
+      // The cast is safe: execv does not modify the argument strings.
+      execv("/bin/sh", const_cast<char* const*>(argv));
 #endif
       ::abort();
       return 1;
