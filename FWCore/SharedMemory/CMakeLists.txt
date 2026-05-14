@@ -16,7 +16,10 @@ target_link_libraries(stitched_FWCore_SharedMemory
         stitched_FWCore_Framework
         stitched_FWCore_Utilities
         Boost::boost
-        rt
+        # librt (POSIX real-time: shm_open, clock_gettime, timer_create, …) is a
+        # separate library on Linux/glibc.  On macOS these symbols are part of
+        # libSystem and no explicit link flag is needed or accepted.
+        $<$<NOT:$<PLATFORM_ID:Darwin>>:rt>
 )
 
 set_target_properties(stitched_FWCore_SharedMemory PROPERTIES
