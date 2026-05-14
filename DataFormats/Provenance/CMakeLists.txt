@@ -5,7 +5,7 @@ file(GLOB HEADERS interface/*.h)
 add_library(DataFormatsProvenance SHARED ${SOURCES})
 
 # Generate ROOT dictionary if classes_def.xml exists
-root_generate_dictionary(DataFormatsProvenance_dict
+stitched_generate_dictionary(DataFormatsProvenance_dict
     ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
     LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml
     MODULE DataFormatsProvenance
