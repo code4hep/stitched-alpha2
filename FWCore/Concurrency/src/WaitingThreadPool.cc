@@ -5,22 +5,16 @@
 
 #include <pthread.h>
 
+namespace {
+  // pthread_setname_np() string length is limited to 16 characters,
+  // including the null termination.
+  constexpr auto poolName = "edm async pool";
+  static_assert(std::string_view(poolName).size() < 16);
+}
+
 namespace edm::impl {
   WaitingThread::WaitingThread() {
     thread_ = std::thread(&WaitingThread::threadLoop, this);
-    static constexpr auto poolName = "edm async pool";
-    // pthread_setname_np() string length is limited to 16 characters,
-    // including the null termination
-    static_assert(std::string_view(poolName).size() < 16);
-
-    [[maybe_unused]] int err = pthread_setname_np(thread_.native_handle(), poolName);
-    // According to the glibc documentation, the only error
-    // pthread_setname_np() can return is about the argument C-string
-    // being too long. We already check above the C-string is shorter
-    // than the limit was at the time of writing. In order to capture
-    // if the limit shortens, or other error conditions get added,
-    // let's assert() anyway (exception feels overkill)
-    assert(err == 0);
   }
 
   WaitingThread::~WaitingThread() noexcept {
@@ -34,6 +28,19 @@ namespace edm::impl {
   }
 
   void WaitingThread::threadLoop() noexcept {
+    // Name this thread.  The two platforms have different signatures:
+    //   Linux:  pthread_setname_np(pthread_t, const char*)  -- can name any thread
+    //   macOS:  pthread_setname_np(const char*)             -- can only name calling thread
+    // We therefore set the name here, inside the thread, which works on both.
+#ifdef __APPLE__
+    [[maybe_unused]] int err = pthread_setname_np(poolName);
+#else
+    [[maybe_unused]] int err = pthread_setname_np(pthread_self(), poolName);
+#endif
+    // The only documented error is ERANGE (name too long), guarded by the
+    // static_assert above.  Assert anyway to catch any future surprises.
+    assert(err == 0);
+
     std::unique_lock lk(mutex_);
 
     while (true) {
