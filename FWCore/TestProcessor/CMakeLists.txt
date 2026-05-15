@@ -2,23 +2,23 @@
 file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
-add_library(FWCoreTestProcessor SHARED ${SOURCES})
+add_library(stitched_FWCore_TestProcessor SHARED ${SOURCES})
 
-target_sources(FWCoreTestProcessor
+target_sources(stitched_FWCore_TestProcessor
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS ${CMAKE_SOURCE_DIR}
         FILES ${HEADERS}
 )
 
-target_link_libraries(FWCoreTestProcessor
+target_link_libraries(stitched_FWCore_TestProcessor
     PUBLIC
-        FWCoreFramework
-        FWCoreServiceRegistry
-        FWCorePythonParameterSet
+        stitched_FWCore_Framework
+        stitched_FWCore_ServiceRegistry
+        stitched_FWCore_PythonParameterSet
 )
 
-set_target_properties(FWCoreTestProcessor PROPERTIES
+set_target_properties(stitched_FWCore_TestProcessor PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )

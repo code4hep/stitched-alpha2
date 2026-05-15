@@ -3,28 +3,28 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS "interface/*.h" "templates/*.py")
 
 
-add_library(FWCoreParameterSet SHARED ${SOURCES})
+add_library(stitched_FWCore_ParameterSet SHARED ${SOURCES})
 
-target_sources(FWCoreParameterSet
+target_sources(stitched_FWCore_ParameterSet
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS ${CMAKE_SOURCE_DIR}
         FILES ${HEADERS}
 )
 
-target_link_libraries(FWCoreParameterSet
+target_link_libraries(stitched_FWCore_ParameterSet
     PUBLIC
-        FWCorePluginManager
-        FWCoreMessageLogger
-        DataFormatsProvenance
-        FWCoreUtilities
+        stitched_FWCore_PluginManager
+        stitched_FWCore_MessageLogger
+        stitched_DataFormats_Provenance
+        stitched_FWCore_Utilities
         Boost::boost
         TBB::tbb
     PRIVATE
         Python3::Python
 )
 
-set_target_properties(FWCoreParameterSet PROPERTIES
+set_target_properties(stitched_FWCore_ParameterSet PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )

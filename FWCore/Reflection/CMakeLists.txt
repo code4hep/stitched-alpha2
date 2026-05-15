@@ -2,22 +2,22 @@
 file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
-add_library(FWCoreReflection SHARED ${SOURCES})
+add_library(stitched_FWCore_Reflection SHARED ${SOURCES})
 
-target_sources(FWCoreReflection
+target_sources(stitched_FWCore_Reflection
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS ${CMAKE_SOURCE_DIR}
         FILES ${HEADERS}
 )
 
-target_link_libraries(FWCoreReflection
+target_link_libraries(stitched_FWCore_Reflection
     PUBLIC
-        FWCoreUtilities
+        stitched_FWCore_Utilities
         ROOT::Core
 )
 
-set_target_properties(FWCoreReflection PROPERTIES
+set_target_properties(stitched_FWCore_Reflection PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )

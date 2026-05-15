@@ -10,8 +10,8 @@ target_include_directories(edmPluginRefresh
 
 target_link_libraries(edmPluginRefresh
     PRIVATE
-        FWCorePluginManager
-        FWCoreUtilities
+        stitched_FWCore_PluginManager
+        stitched_FWCore_Utilities
         Boost::program_options
 )
 
@@ -25,6 +25,6 @@ target_include_directories(edmPluginDump
 
 target_link_libraries(edmPluginDump
     PRIVATE
-        FWCorePluginManager
+        stitched_FWCore_PluginManager
         Boost::program_options
 )

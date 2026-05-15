@@ -2,24 +2,24 @@
 file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
-add_library(FWCoreSharedMemory SHARED ${SOURCES})
+add_library(stitched_FWCore_SharedMemory SHARED ${SOURCES})
 
-target_sources(FWCoreSharedMemory
+target_sources(stitched_FWCore_SharedMemory
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS ${CMAKE_SOURCE_DIR}
         FILES ${HEADERS}
 )
 
-target_link_libraries(FWCoreSharedMemory
+target_link_libraries(stitched_FWCore_SharedMemory
     PUBLIC
-        FWCoreFramework
-        FWCoreUtilities
+        stitched_FWCore_Framework
+        stitched_FWCore_Utilities
         Boost::boost
         rt
 )
 
-set_target_properties(FWCoreSharedMemory PROPERTIES
+set_target_properties(stitched_FWCore_SharedMemory PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )

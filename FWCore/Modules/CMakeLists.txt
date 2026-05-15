@@ -2,10 +2,10 @@
 file(GLOB SOURCES plugins/*.cc)
 
 stitched_generate_plugin(
-    TARGET FWCoreModulesPlugins
+    TARGET stitched_FWCore_ModulesPlugins
     SOURCES ${SOURCES}
     LINK_LIBRARIES
-        FWCoreSources
-        FWCoreFramework
-        FWCoreParameterSet
+        stitched_FWCore_Sources
+        stitched_FWCore_Framework
+        stitched_FWCore_ParameterSet
 )

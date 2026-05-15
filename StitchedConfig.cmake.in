@@ -49,26 +49,26 @@ set(Stitched_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
 
 # Provide a list of available libraries/components
 set(Stitched_LIBRARIES
-    FWCoreUtilities
-    FWCorePluginManager
-    FWCoreReflection
-    FWCoreVersion
-    FWCoreParameterSet
-    FWCoreParameterSetReader
-    FWCorePythonParameterSet
-    FWCoreServiceRegistry
-    FWCoreMessageLogger
-    FWCoreMessageService
-    FWCoreAbstractServices
-    FWCoreConcurrency
-    FWCoreSharedMemory
-    FWCoreCommon
-    FWCoreFramework
-    FWCoreSources
-    FWCorePythonFramework
-    FWCoreTestProcessor
-    FWCoreServices
-    FWCoreIntegration
+    stitched_FWCore_Utilities
+    stitched_FWCore_PluginManager
+    stitched_FWCore_Reflection
+    stitched_FWCore_Version
+    stitched_FWCore_ParameterSet
+    stitched_FWCore_ParameterSetReader
+    stitched_FWCore_PythonParameterSet
+    stitched_FWCore_ServiceRegistry
+    stitched_FWCore_MessageLogger
+    stitched_FWCore_MessageService
+    stitched_FWCore_AbstractServices
+    stitched_FWCore_Concurrency
+    stitched_FWCore_SharedMemory
+    stitched_FWCore_Common
+    stitched_FWCore_Framework
+    stitched_FWCore_Sources
+    stitched_FWCore_PythonFramework
+    stitched_FWCore_TestProcessor
+    stitched_FWCore_Services
+    stitched_FWCore_Integration
     DataFormatsCommon
     DataFormatsProvenance
     DataFormatsTestObjects

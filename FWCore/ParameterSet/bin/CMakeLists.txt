@@ -10,9 +10,9 @@ target_include_directories(edmPluginHelp
 
 target_link_libraries(edmPluginHelp
     PRIVATE
-        FWCoreParameterSet
-        FWCorePluginManager
-        FWCoreUtilities
+        stitched_FWCore_ParameterSet
+        stitched_FWCore_PluginManager
+        stitched_FWCore_Utilities
         Boost::program_options
 )
 
@@ -26,8 +26,8 @@ target_include_directories(edmWriteConfigs
 
 target_link_libraries(edmWriteConfigs
     PRIVATE
-        FWCoreParameterSet
-        FWCorePluginManager
-        FWCoreUtilities
+        stitched_FWCore_ParameterSet
+        stitched_FWCore_PluginManager
+        stitched_FWCore_Utilities
         Boost::program_options
 )

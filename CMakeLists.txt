@@ -64,11 +64,11 @@ add_subdirectory(FWCore)
 # Generate plugin cache for all plugin libraries
 stitched_generate_plugincache(
     PLUGIN_TARGETS
-        FWCoreModulesPlugins
-        FWCoreIntegrationPlugins
-        FWCoreMessageServicePlugins
-        FWCoreServicesPlugins
-        FWCoreTestModulesPlugins
+        stitched_FWCore_ModulesPlugins
+        stitched_FWCore_IntegrationPlugins
+        stitched_FWCore_MessageServicePlugins
+        stitched_FWCore_ServicesPlugins
+        stitched_FWCore_TestModulesPlugins
 )
 
 # Configure environment setup scripts
@@ -93,41 +93,41 @@ set(CONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/Stitched)
 # Get all library targets that were created
 set(Stitched_EXPORT_TARGETS
     # FWCore libraries
-    FWCoreUtilities
-    FWCorePluginManager
-    FWCoreReflection
-    FWCoreVersion
-    FWCoreParameterSet
-    FWCoreParameterSetReader
-    FWCorePythonParameterSet
-    FWCoreServiceRegistry
-    FWCoreMessageLogger
-    FWCoreMessageService
-    FWCoreAbstractServices
-    FWCoreConcurrency
-    FWCoreSharedMemory
-    FWCoreCommon
-    FWCoreFramework
-    FWCoreSources
-    FWCorePythonFramework
-    FWCoreTestProcessor
-    FWCoreServices
-    FWCoreIntegration
+    stitched_FWCore_Utilities
+    stitched_FWCore_PluginManager
+    stitched_FWCore_Reflection
+    stitched_FWCore_Version
+    stitched_FWCore_ParameterSet
+    stitched_FWCore_ParameterSetReader
+    stitched_FWCore_PythonParameterSet
+    stitched_FWCore_ServiceRegistry
+    stitched_FWCore_MessageLogger
+    stitched_FWCore_MessageService
+    stitched_FWCore_AbstractServices
+    stitched_FWCore_Concurrency
+    stitched_FWCore_SharedMemory
+    stitched_FWCore_Common
+    stitched_FWCore_Framework
+    stitched_FWCore_Sources
+    stitched_FWCore_PythonFramework
+    stitched_FWCore_TestProcessor
+    stitched_FWCore_Services
+    stitched_FWCore_Integration
     # FWCore plugins
-    FWCoreModulesPlugins
-    FWCoreIntegrationPlugins
-    FWCoreMessageServicePlugins
-    FWCoreServicesPlugins
-    FWCoreTestModulesPlugins
+    stitched_FWCore_ModulesPlugins
+    stitched_FWCore_IntegrationPlugins
+    stitched_FWCore_MessageServicePlugins
+    stitched_FWCore_ServicesPlugins
+    stitched_FWCore_TestModulesPlugins
     # DataFormats libraries
-    DataFormatsCommon
-    DataFormatsProvenance
-    DataFormatsTestObjects
-    DataFormatsStdDictionaries_map
-    DataFormatsStdDictionaries_others
-    DataFormatsStdDictionaries_pair
-    DataFormatsStdDictionaries_vector
-    DataFormatsWrappedStdDictionaries
+    stitched_DataFormats_Common
+    stitched_DataFormats_Provenance
+    stitched_DataFormats_TestObjects
+    stitched_DataFormats_StdDictionaries_map
+    stitched_DataFormats_StdDictionaries_others
+    stitched_DataFormats_StdDictionaries_pair
+    stitched_DataFormats_StdDictionaries_vector
+    stitched_DataFormats_WrappedStdDictionaries
 )
 
 # Install libraries and executables
