@@ -2,17 +2,17 @@
 file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h interface/*.icc)
 
-add_library(FWCoreUtilities SHARED ${SOURCES})
+add_library(stitched_FWCore_Utilities SHARED ${SOURCES})
 
 # Associate headers with the target using FILE_SET
-target_sources(FWCoreUtilities
+target_sources(stitched_FWCore_Utilities
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS ${CMAKE_SOURCE_DIR}
         FILES ${HEADERS}
 )
 
-target_link_libraries(FWCoreUtilities
+target_link_libraries(stitched_FWCore_Utilities
     PUBLIC
         Boost::boost
         TBB::tbb
@@ -23,10 +23,10 @@ target_link_libraries(FWCoreUtilities
 # Try to link UUID if available
 find_library(UUID_LIBRARY uuid)
 if(UUID_LIBRARY)
-    target_link_libraries(FWCoreUtilities PUBLIC ${UUID_LIBRARY})
+    target_link_libraries(stitched_FWCore_Utilities PUBLIC ${UUID_LIBRARY})
 endif()
 
-set_target_properties(FWCoreUtilities PROPERTIES
+set_target_properties(stitched_FWCore_Utilities PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )

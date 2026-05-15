@@ -2,23 +2,23 @@
 file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
-add_library(FWCoreConcurrency SHARED ${SOURCES})
+add_library(stitched_FWCore_Concurrency SHARED ${SOURCES})
 
-target_sources(FWCoreConcurrency
+target_sources(stitched_FWCore_Concurrency
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS ${CMAKE_SOURCE_DIR}
         FILES ${HEADERS}
 )
 
-target_link_libraries(FWCoreConcurrency
+target_link_libraries(stitched_FWCore_Concurrency
     PUBLIC
-        FWCoreUtilities
+        stitched_FWCore_Utilities
         TBB::tbb
         Threads::Threads
 )
 
-set_target_properties(FWCoreConcurrency PROPERTIES
+set_target_properties(stitched_FWCore_Concurrency PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )

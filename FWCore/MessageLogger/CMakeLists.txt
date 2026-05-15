@@ -2,26 +2,26 @@
 file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h  interface/*.icc)
 
-add_library(FWCoreMessageLogger SHARED ${SOURCES})
+add_library(stitched_FWCore_MessageLogger SHARED ${SOURCES})
 
-target_sources(FWCoreMessageLogger
+target_sources(stitched_FWCore_MessageLogger
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS ${CMAKE_SOURCE_DIR}
         FILES ${HEADERS}
 )
 
-target_link_libraries(FWCoreMessageLogger
+target_link_libraries(stitched_FWCore_MessageLogger
     PUBLIC
-        DataFormatsProvenance
-        FWCoreUtilities
+        stitched_DataFormats_Provenance
+        stitched_FWCore_Utilities
         Boost::boost
         Threads::Threads
     PRIVATE
         tinyxml2
 )
 
-set_target_properties(FWCoreMessageLogger PROPERTIES
+set_target_properties(stitched_FWCore_MessageLogger PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
 )

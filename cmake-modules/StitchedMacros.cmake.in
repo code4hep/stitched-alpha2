@@ -90,8 +90,8 @@ Generate a Stitched EDM plugin library with automatic configuration generation.
           TARGET MyPlugins
           SOURCES ${PLUGIN_SOURCES}
           LINK_LIBRARIES
-              FWCoreFramework
-              FWCoreParameterSet
+              stitched_FWCore_Framework
+              stitched_FWCore_ParameterSet
       )
 
 #]=======================================================================]
@@ -224,9 +224,9 @@ Generate the .edmplugincache file for Stitched EDM plugin libraries.
 
       stitched_generate_plugincache(
           PLUGIN_TARGETS
-              FWCoreModulesPlugins
-              FWCoreIntegrationPlugins
-              FWCoreServicesPlugins
+              stitched_FWCore_ModulesPlugins
+              stitched_FWCore_IntegrationPlugins
+              stitched_FWCore_ServicesPlugins
               MyCustomPlugins
       )
 
