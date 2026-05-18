@@ -18,7 +18,7 @@
 // to add module type and label context to the messages being caught
 // here. At this point we did not think it worth the time to implement.
 
-PYBIND11_MODULE(libFWCorePythonFramework, m) {
+PYBIND11_MODULE(libstitched_FWCore_PythonFramework, m) {
   pybind11::register_exception_translator([](std::exception_ptr p) {
     try {
       if (p)
