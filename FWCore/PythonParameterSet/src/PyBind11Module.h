@@ -32,7 +32,7 @@
 
 #include <pybind11/pybind11.h>
 
-PYBIND11_MODULE(libFWCorePythonParameterSet, m) {
+PYBIND11_MODULE(libstitched_FWCore_PythonParameterSet, m) {
   pybind11::register_exception_translator([](std::exception_ptr p) {
     try {
       if (p)
