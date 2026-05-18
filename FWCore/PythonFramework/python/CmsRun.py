@@ -1,5 +1,5 @@
-import libFWCorePythonFramework as _pf
-import libFWCorePythonParameterSet as _pp
+import libstitched_FWCore_PythonFramework as _pf
+import libstitched_FWCore_PythonParameterSet as _pp
 
 class CmsRun(object):
   def __init__(self,process):
