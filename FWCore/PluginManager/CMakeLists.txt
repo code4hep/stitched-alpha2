@@ -14,7 +14,6 @@ target_sources(stitched_FWCore_PluginManager
 target_link_libraries(stitched_FWCore_PluginManager
     PUBLIC
         stitched_FWCore_Utilities
-        Boost::filesystem
         ${CMAKE_DL_LIBS}
         ROOT::Core
 )
