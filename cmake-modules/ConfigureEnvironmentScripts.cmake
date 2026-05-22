@@ -37,7 +37,6 @@ endfunction()
 
 # Extract library directories from imported targets
 add_lib_dir_from_target(Boost::boost)
-add_lib_dir_from_target(Boost::filesystem)
 add_lib_dir_from_target(TBB::tbb)
 add_lib_dir_from_target(ROOT::Core)
 add_lib_dir_from_target(tinyxml2)

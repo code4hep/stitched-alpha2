@@ -32,7 +32,7 @@ configure_file(
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}/cmake-modules")
 include(StitchedMacros)
 
-find_package(Boost REQUIRED COMPONENTS program_options filesystem serialization)
+find_package(Boost REQUIRED COMPONENTS program_options)
 message(STATUS "Found Boost: ${Boost_VERSION} at ${Boost_DIR}")
 find_package(Threads REQUIRED)
 find_package(TBB REQUIRED)
