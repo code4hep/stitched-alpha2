@@ -4,6 +4,12 @@ file(GLOB HEADERS interface/*.h interface/*.icc interface/*/*.h)
 
 add_library(stitched_FWCore_Framework SHARED ${SOURCES})
 
+target_include_directories(stitched_FWCore_Framework
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
 target_sources(stitched_FWCore_Framework
     PUBLIC
         FILE_SET HEADERS

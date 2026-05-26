@@ -4,6 +4,12 @@ file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_PluginManager SHARED ${SOURCES})
 
+target_include_directories(stitched_FWCore_PluginManager
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
 target_sources(stitched_FWCore_PluginManager
     PUBLIC
         FILE_SET HEADERS

@@ -4,6 +4,12 @@ file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_DataFormats_Provenance SHARED ${SOURCES})
 
+target_include_directories(stitched_DataFormats_Provenance
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
 # Generate ROOT dictionary if classes_def.xml exists
 stitched_generate_dictionary(stitched_DataFormats_Provenance_dict
     ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
