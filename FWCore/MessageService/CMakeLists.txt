@@ -4,6 +4,12 @@ file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_MessageService SHARED ${SOURCES})
 
+target_include_directories(stitched_FWCore_MessageService
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
 target_sources(stitched_FWCore_MessageService
     PUBLIC
         FILE_SET HEADERS

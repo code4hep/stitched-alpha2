@@ -5,6 +5,12 @@ file(GLOB HEADERS "interface/*.h" "templates/*.py")
 
 add_library(stitched_FWCore_ParameterSet SHARED ${SOURCES})
 
+target_include_directories(stitched_FWCore_ParameterSet
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
 target_sources(stitched_FWCore_ParameterSet
     PUBLIC
         FILE_SET HEADERS

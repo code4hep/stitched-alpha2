@@ -4,6 +4,12 @@ file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_Common SHARED ${SOURCES})
 
+target_include_directories(stitched_FWCore_Common
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
 # Generate ROOT dictionary if classes_def.xml exists
 stitched_generate_dictionary(stitched_FWCore_Common_dict
     ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
