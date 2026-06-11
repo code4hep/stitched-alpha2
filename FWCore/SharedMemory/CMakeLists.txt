@@ -19,7 +19,6 @@ target_sources(stitched_FWCore_SharedMemory
 
 target_link_libraries(stitched_FWCore_SharedMemory
     PUBLIC
-        stitched_FWCore_Framework
         stitched_FWCore_Utilities
         Boost::boost
         rt
