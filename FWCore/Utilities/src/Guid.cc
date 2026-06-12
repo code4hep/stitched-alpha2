@@ -36,7 +36,7 @@ namespace edm {
   }
 
   std::string const Guid::toString() const {
-    char out[UUID_STR_LEN];
+    uuid_string_t out;
     ::uuid_unparse(data_, out);
     return std::string(out);
   }

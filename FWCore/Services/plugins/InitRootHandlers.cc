@@ -32,12 +32,20 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <fcntl.h>
+#include <unistd.h>
 
 // WORKAROUND: At CERN, execv is replaced with a non-async-signal safe
 // version.  This can break our stack trace printer.  Avoid this by
 // invoking the syscall directly.
 #ifdef __linux__
 #include <syscall.h>
+#endif
+
+// On macOS, __environ is not available; use _NSGetEnviron() from crt_externs.h
+#ifdef __APPLE__
+#include <crt_externs.h>
+#define environ (*_NSGetEnviron())
 #endif
 
 #include "TROOT.h"
@@ -51,8 +59,6 @@
 #include "TVirtualStreamerInfo.h"
 
 #include "TClassTable.h"
-
-#include <memory>
 
 namespace {
   // size of static buffer allocated for listing module names following a
@@ -423,16 +429,18 @@ namespace {
 
   static int full_cerr_write(const char* text) { return full_write(2, text); }
 
-// these signals are only used inside the stacktrace signal handler,
-// so common signals can be used.  They do have to be different, since
-// we do not set SA_NODEFER, and RESUME must be a signal that will
-// cause sleep() to return early.
+// Thread-pause/resume during stack trace:
+// On Linux we use real-time signals (SIGRTMAX / SIGRTMAX-1) which can be
+// reliably blocked, queued, and used to interrupt sleep().
+// On macOS SIGRTMAX does not exist; SIGINFO is the closest alternative but
+// cannot be reliably blocked with pthread_sigmask on all macOS versions and
+// does not wake sleep() portably.  We therefore disable the whole
+// pause/resume mechanism on macOS — gdb still produces a useful stacktrace
+// for the crashing thread; the per-thread module list is simply omitted.
+#ifndef __APPLE__
 #if defined(SIGRTMAX)
 #define PAUSE_SIGNAL SIGRTMAX
 #define RESUME_SIGNAL SIGRTMAX - 1
-#elif defined(SIGINFO)  // macOS/BSD
-#define PAUSE_SIGNAL SIGINFO
-#define RESUME_SIGNAL SIGALRM
 #endif
 
   // does nothing, here only to interrupt the sleep() in the pause handler
@@ -448,7 +456,7 @@ namespace {
     sigaddset(&sigset, RESUME_SIGNAL);
     pthread_sigmask(SIG_UNBLOCK, &sigset, nullptr);
 #endif
-    // sleep interrrupts on a handled delivery of the resume signal
+    // sleep interrupts on a handled delivery of the resume signal
     sleep(InitRootHandlers::stackTracePause());
 
     if (InitRootHandlers::doneModules_.is_lock_free() && InitRootHandlers::nextModule_.is_lock_free()) {
@@ -472,6 +480,7 @@ namespace {
       }
     }
   }
+#endif  // !__APPLE__
 
   void sig_dostack_then_abort(int sig, siginfo_t*, void*) {
     using namespace edm::service;
@@ -479,7 +488,7 @@ namespace {
     const auto& tids = InitRootHandlers::threadIDs();
 
     const auto self = pthread_self();
-#ifdef PAUSE_SIGNAL
+#if defined(PAUSE_SIGNAL)
     if (InitRootHandlers::stackTracePause() > 0 && tids.size() > 1) {
       // install the "pause" handler
       struct sigaction act;
@@ -501,13 +510,13 @@ namespace {
         }
       }
 
-#ifdef RESUME_SIGNAL
+#if defined(RESUME_SIGNAL)
       // install the "resume" handler
       act.sa_sigaction = sig_resume_handler;
       sigaction(RESUME_SIGNAL, &act, nullptr);
 #endif
     }
-#endif
+#endif  // PAUSE_SIGNAL
 
     const char* signalname = "unknown";
     switch (sig) {
@@ -548,7 +557,7 @@ namespace {
     // will have time to store their modules, so there is a race condition; this could be
     // avoided by storing the module information before sleeping, a change that may be
     // made when we're convinced accessing the thread-local current module is safe.
-#ifdef RESUME_SIGNAL
+#if defined(RESUME_SIGNAL)
     std::size_t notified = 0;
     if (InitRootHandlers::stackTracePause() > 0 && tids.size() > 1) {
       for (auto id : tids) {
@@ -558,7 +567,7 @@ namespace {
         }
       }
     }
-#endif
+#endif  // RESUME_SIGNAL
 
     full_cerr_write("\nCurrent Modules:\n");
 
@@ -586,7 +595,7 @@ namespace {
       full_cerr_write("\nModule: non-CMSSW (crashed)");
     }
 
-#ifdef PAUSE_SIGNAL
+#if defined(PAUSE_SIGNAL)
     // wait a short interval for the paused threads to resume and fill in their module
     // information, then print
     if (InitRootHandlers::doneModules_.is_lock_free()) {
@@ -599,7 +608,7 @@ namespace {
         full_cerr_write(InitRootHandlers::moduleListBuffers_[i].data());
       }
     }
-#endif
+#endif  // PAUSE_SIGNAL
 
     full_cerr_write("\n\nA fatal system signal has occurred: ");
     full_cerr_write(signalname);
@@ -642,6 +651,32 @@ namespace edm {
      * invocation; we don't care if that thread is missing from the traceback in this case.
      */
     static void cmssw_stacktrace_fork();
+
+    // pipe2() is Linux-specific.  On macOS we emulate it with pipe() + fcntl().
+    static int safe_pipe2(int fds[2], int flags) {
+#ifdef __linux__
+      return pipe2(fds, flags);
+#else
+      if (pipe(fds) == -1)
+        return -1;
+      // Apply each flag separately via fcntl.
+      if (flags & O_CLOEXEC) {
+        if (fcntl(fds[0], F_SETFD, FD_CLOEXEC) == -1 || fcntl(fds[1], F_SETFD, FD_CLOEXEC) == -1) {
+          close(fds[0]);
+          close(fds[1]);
+          return -1;
+        }
+      }
+      if (flags & O_NONBLOCK) {
+        if (fcntl(fds[0], F_SETFL, O_NONBLOCK) == -1 || fcntl(fds[1], F_SETFL, O_NONBLOCK) == -1) {
+          close(fds[0]);
+          close(fds[1]);
+          return -1;
+        }
+      }
+      return 0;
+#endif
+    }
 
     void InitRootHandlers::stacktraceHelperThread() {
       int toParent = childToParent_[1];
@@ -709,19 +744,20 @@ namespace edm {
     }
 
     void cmssw_stacktrace_fork() {
+      // On Linux, we use clone() instead of fork() to avoid pthread_atfork
+      // handlers (e.g. from jemalloc) which are not async-signal-safe.
+      // clone() requires a pre-allocated stack for the child.
+      // On macOS, clone() does not exist; fork() is used and macOS's libSystem
+      // does not register problematic atfork handlers in the same way.
+#ifdef __linux__
       char child_stack[4 * 1024];
       char* child_stack_ptr = child_stack + 4 * 1024;
-      // On Linux, we currently use jemalloc.  This registers pthread_atfork handlers; these
-      // handlers are *not* async-signal safe.  Hence, a deadlock is possible if we invoke
-      // fork() from our signal handlers.  Accordingly, we use clone (not POSIX, but AS-safe)
-      // as that is closer to the 'raw metal' syscall and avoids pthread_atfork handlers.
+#endif
       int pid =
 #ifdef __linux__
           clone(edm::service::cmssw_stacktrace, child_stack_ptr, CLONE_VM | CLONE_FS | SIGCHLD, nullptr);
 #else
           fork();
-      if (child_stack_ptr) {
-      }  // Suppress 'unused variable' warning on non-Linux
       if (pid == 0) {
         edm::service::cmssw_stacktrace(nullptr);
       }
@@ -745,11 +781,17 @@ namespace edm {
       char const* const* argv = edm::service::InitRootHandlers::getPstackArgv();
       // NOTE: this is NOT async-signal-safe at CERN's lxplus service.
       // CERN uses LD_PRELOAD to replace execv with a function from libsnoopy which
-      // calls dlsym.
+      // calls dlsym.  On Linux we bypass that by invoking the execve syscall
+      // directly.  On macOS no such interception exists, so execv() is fine.
+      // __environ is Linux glibc; on macOS we define environ via _NSGetEnviron()
+      // at the top of this file.
 #ifdef __linux__
-      syscall(SYS_execve, "/bin/sh", argv, __environ);
+      syscall(SYS_execve, "/bin/sh", argv, environ);
 #else
-      execv("/bin/sh", argv);
+      // execv() is declared as execv(const char*, char* const*) on macOS —
+      // missing the const on the pointee, a well-known POSIX historical wart.
+      // The cast is safe: execv does not modify the argument strings.
+      execv("/bin/sh", const_cast<char* const*>(argv));
 #endif
       ::abort();
       return 1;
@@ -988,14 +1030,14 @@ namespace edm {
       parentToChild_[0] = -1;
       parentToChild_[1] = -1;
 
-      if (-1 == pipe2(childToParent_, O_CLOEXEC)) {
+      if (-1 == safe_pipe2(childToParent_, O_CLOEXEC)) {
         std::ostringstream sstr;
         sstr << "Failed to create child-to-parent pipes (errno=" << errno << "): " << strerror(errno);
         edm::Exception except(edm::errors::OtherCMS, sstr.str());
         throw except;
       }
 
-      if (-1 == pipe2(parentToChild_, O_CLOEXEC)) {
+      if (-1 == safe_pipe2(parentToChild_, O_CLOEXEC)) {
         close(childToParent_[0]);
         close(childToParent_[1]);
         childToParent_[0] = -1;
