@@ -31,10 +31,11 @@ find_dependency(ROOT REQUIRED COMPONENTS Core RIO Net Hist Tree)
 #find_dependency(tinyxml2 REQUIRED) #not needed since is PRIVATE dependency
 find_dependency(c4h_md5 REQUIRED)
 find_dependency(CLHEP REQUIRED)
-#find_dependency(pybind11 REQUIRED) # not needed since is PRIVATE dependency
+find_dependency(pybind11 REQUIRED)
 
-# Note: Python3, cpu_features and other dependencies may need to be found
-# by the consuming project if they're used directly
+# Find Python3 (needed publicly by FWCore/PythonParameterSet and
+# FWCore/ParameterSetReader)
+find_dependency(Python3 REQUIRED COMPONENTS Interpreter Development)
 
 # Include the targets file
 include("${Stitched_CMAKE_DIR}/StitchedTargets.cmake")
