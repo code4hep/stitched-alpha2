@@ -13,18 +13,9 @@ target_sources(stitched_FWCore_Services
 
 target_link_libraries(stitched_FWCore_Services
     PUBLIC
-        stitched_FWCore_AbstractServices
         stitched_FWCore_MessageLogger
         stitched_FWCore_ParameterSet
         stitched_FWCore_ServiceRegistry
-        stitched_DataFormats_Provenance
-        stitched_FWCore_Utilities
-        Boost::boost
-        CLHEP::CLHEP
-        CpuFeatures::cpu_features
-        ROOT::Tree
-        ROOT::Hist
-        atomic
 )
 
 set_target_properties(stitched_FWCore_Services PROPERTIES
@@ -39,4 +30,12 @@ stitched_generate_plugin(
     LINK_LIBRARIES
                 stitched_FWCore_Services
                 stitched_FWCore_Framework
+                stitched_FWCore_AbstractServices
+                stitched_DataFormats_Provenance
+                stitched_FWCore_Utilities
+                Boost::boost
+                CpuFeatures::cpu_features
+                ROOT::Tree
+                ROOT::Hist
+                atomic
 )
