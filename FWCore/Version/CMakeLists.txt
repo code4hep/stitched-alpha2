@@ -20,4 +20,5 @@ target_sources(stitched_FWCore_Version
 set_target_properties(stitched_FWCore_Version PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME FWCore_Version
 )

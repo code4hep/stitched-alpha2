@@ -24,6 +24,7 @@ target_link_libraries(stitched_FWCore_PythonParameterSet
 set_target_properties(stitched_FWCore_PythonParameterSet PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME FWCore_PythonParameterSet
 )
 
 # Copy and install Python files

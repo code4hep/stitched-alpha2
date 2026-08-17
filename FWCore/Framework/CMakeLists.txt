@@ -40,6 +40,7 @@ target_link_libraries(stitched_FWCore_Framework
 set_target_properties(stitched_FWCore_Framework PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME FWCore_Framework
 )
 
 # Build cmsRun executable

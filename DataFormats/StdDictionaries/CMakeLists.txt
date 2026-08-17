@@ -15,6 +15,7 @@ target_link_libraries(stitched_DataFormats_StdDictionaries_map PUBLIC ROOT::Core
 set_target_properties(stitched_DataFormats_StdDictionaries_map PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME DataFormats_StdDictionaries_map
 )
 
 add_library(stitched_DataFormats_StdDictionaries_others SHARED)
@@ -32,6 +33,7 @@ target_link_libraries(stitched_DataFormats_StdDictionaries_others PUBLIC ROOT::C
 set_target_properties(stitched_DataFormats_StdDictionaries_others PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME DataFormats_StdDictionaries_others
 )
 add_library(stitched_DataFormats_StdDictionaries_pair SHARED)
 # Generate dictionary
@@ -48,6 +50,7 @@ target_link_libraries(stitched_DataFormats_StdDictionaries_pair PUBLIC ROOT::Cor
 set_target_properties(stitched_DataFormats_StdDictionaries_pair PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME DataFormats_StdDictionaries_pair
 )
 add_library(stitched_DataFormats_StdDictionaries_vector SHARED)
 # Generate dictionary
@@ -64,4 +67,5 @@ target_link_libraries(stitched_DataFormats_StdDictionaries_vector PUBLIC ROOT::C
 set_target_properties(stitched_DataFormats_StdDictionaries_vector PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME DataFormats_StdDictionaries_vector
 )
