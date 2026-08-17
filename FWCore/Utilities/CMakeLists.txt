@@ -35,6 +35,7 @@ endif()
 set_target_properties(stitched_FWCore_Utilities PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME FWCore_Utilities
 )
 
 # Copy and install Python files

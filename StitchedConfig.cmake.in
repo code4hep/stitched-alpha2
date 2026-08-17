@@ -48,31 +48,36 @@ include("${Stitched_CMAKE_DIR}/StitchedMacros.cmake")
 set(Stitched_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
 set(Stitched_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
 
-# Provide a list of available libraries/components
+# Provide a list of available libraries/components, using the exported
+# Stitched:: target names (see StitchedTargets.cmake) so this list can be
+# passed directly to target_link_libraries() by consumers.
+# Note: Dictionary-only libraries are not included here because no
+# consumer should link against them. They are still exported as
+# targets (see StitchedTargets.cmake) for completeness.
 set(Stitched_LIBRARIES
-    stitched_FWCore_Utilities
-    stitched_FWCore_PluginManager
-    stitched_FWCore_Reflection
-    stitched_FWCore_Version
-    stitched_FWCore_ParameterSet
-    stitched_FWCore_ParameterSetReader
-    stitched_FWCore_PythonParameterSet
-    stitched_FWCore_ServiceRegistry
-    stitched_FWCore_MessageLogger
-    stitched_FWCore_MessageService
-    stitched_FWCore_AbstractServices
-    stitched_FWCore_Concurrency
-    stitched_FWCore_SharedMemory
-    stitched_FWCore_Common
-    stitched_FWCore_Framework
-    stitched_FWCore_Sources
-    stitched_FWCore_PythonFramework
-    stitched_FWCore_TestProcessor
-    stitched_FWCore_Services
-    stitched_FWCore_Integration
-    DataFormatsCommon
-    DataFormatsProvenance
-    DataFormatsTestObjects
+    Stitched::FWCore_Utilities
+    Stitched::FWCore_PluginManager
+    Stitched::FWCore_Reflection
+    Stitched::FWCore_Version
+    Stitched::FWCore_ParameterSet
+    Stitched::FWCore_ParameterSetReader
+    Stitched::FWCore_PythonParameterSet
+    Stitched::FWCore_ServiceRegistry
+    Stitched::FWCore_MessageLogger
+    Stitched::FWCore_MessageService
+    Stitched::FWCore_AbstractServices
+    Stitched::FWCore_Concurrency
+    Stitched::FWCore_SharedMemory
+    Stitched::FWCore_Common
+    Stitched::FWCore_Framework
+    Stitched::FWCore_Sources
+    Stitched::FWCore_PythonFramework
+    Stitched::FWCore_TestProcessor
+    Stitched::FWCore_Services
+    Stitched::FWCore_Integration
+    Stitched::DataFormats_Common
+    Stitched::DataFormats_Provenance
+    Stitched::DataFormats_TestObjects
 )
 
 # Check if requested components are available

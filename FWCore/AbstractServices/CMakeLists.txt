@@ -20,4 +20,5 @@ target_sources(stitched_FWCore_AbstractServices
 set_target_properties(stitched_FWCore_AbstractServices PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME FWCore_AbstractServices
 )

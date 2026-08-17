@@ -38,4 +38,5 @@ target_link_libraries(stitched_DataFormats_Provenance
 set_target_properties(stitched_DataFormats_Provenance PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME DataFormats_Provenance
 )

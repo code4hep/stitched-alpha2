@@ -21,6 +21,7 @@ target_link_libraries(stitched_FWCore_Services
 set_target_properties(stitched_FWCore_Services PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME FWCore_Services
 )
 
 file(GLOB PLUGIN_SOURCES plugins/*.cc)

@@ -27,6 +27,7 @@ target_link_libraries(stitched_FWCore_TestProcessor
 set_target_properties(stitched_FWCore_TestProcessor PROPERTIES
     VERSION 1.0.0
     SOVERSION 1
+    EXPORT_NAME FWCore_TestProcessor
 )
 
 # Copy and install Python files
