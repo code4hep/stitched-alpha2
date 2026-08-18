@@ -6,6 +6,7 @@ if(NOT SOURCES)
 endif()
 
 add_library(stitched_FWCore_PythonParameterSet SHARED ${SOURCES})
+add_library(Stitched::FWCore_PythonParameterSet ALIAS stitched_FWCore_PythonParameterSet)
 
 #can't use target_sources as headers needed by other targets in this project
 target_include_directories(stitched_FWCore_PythonParameterSet
@@ -16,7 +17,7 @@ target_include_directories(stitched_FWCore_PythonParameterSet
 
 target_link_libraries(stitched_FWCore_PythonParameterSet
     PUBLIC
-        stitched_FWCore_ParameterSet
+        Stitched::FWCore_ParameterSet
         Python3::Python
         pybind11::pybind11
 )

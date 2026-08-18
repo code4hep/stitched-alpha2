@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_Common SHARED ${SOURCES})
+add_library(Stitched::FWCore_Common ALIAS stitched_FWCore_Common)
 
 target_include_directories(stitched_FWCore_Common
     PUBLIC
@@ -27,10 +28,10 @@ target_sources(stitched_FWCore_Common
 
 target_link_libraries(stitched_FWCore_Common
     PUBLIC
-        stitched_DataFormats_Common
-        stitched_DataFormats_Provenance
-        stitched_FWCore_ParameterSet
-        stitched_FWCore_Utilities
+        Stitched::DataFormats_Common
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_Utilities
         ROOT::Core
 )
 

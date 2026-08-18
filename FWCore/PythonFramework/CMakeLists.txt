@@ -6,6 +6,7 @@ if(NOT SOURCES)
 endif()
 
 add_library(stitched_FWCore_PythonFramework SHARED ${SOURCES})
+add_library(Stitched::FWCore_PythonFramework ALIAS stitched_FWCore_PythonFramework)
 
 #can't use target_sources as need access to headers in other targets of this project
 target_include_directories(stitched_FWCore_PythonFramework
@@ -16,8 +17,8 @@ target_include_directories(stitched_FWCore_PythonFramework
 
 target_link_libraries(stitched_FWCore_PythonFramework
     PRIVATE
-        stitched_FWCore_Framework
-        stitched_FWCore_PythonParameterSet
+        Stitched::FWCore_Framework
+        Stitched::FWCore_PythonParameterSet
         Python3::Python
 )
 

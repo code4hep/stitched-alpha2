@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_TestProcessor SHARED ${SOURCES})
+add_library(Stitched::FWCore_TestProcessor ALIAS stitched_FWCore_TestProcessor)
 
 target_include_directories(stitched_FWCore_TestProcessor
     PUBLIC
@@ -19,9 +20,9 @@ target_sources(stitched_FWCore_TestProcessor
 
 target_link_libraries(stitched_FWCore_TestProcessor
     PUBLIC
-        stitched_FWCore_Framework
-        stitched_FWCore_ServiceRegistry
-        stitched_FWCore_PythonParameterSet
+        Stitched::FWCore_Framework
+        Stitched::FWCore_ServiceRegistry
+        Stitched::FWCore_PythonParameterSet
 )
 
 set_target_properties(stitched_FWCore_TestProcessor PROPERTIES

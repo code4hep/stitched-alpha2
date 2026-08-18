@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_Integration SHARED ${SOURCES})
+add_library(Stitched::FWCore_Integration ALIAS stitched_FWCore_Integration)
 
 target_include_directories(stitched_FWCore_Integration
     PUBLIC
@@ -19,11 +20,11 @@ target_sources(stitched_FWCore_Integration
 
 target_link_libraries(stitched_FWCore_Integration
     PUBLIC
-        stitched_DataFormats_Common
-        stitched_DataFormats_Provenance
-        stitched_FWCore_Framework
-        stitched_FWCore_ParameterSet
-        stitched_FWCore_Utilities
+        Stitched::DataFormats_Common
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_Framework
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_Utilities
         CLHEP::CLHEP
 )
 
@@ -38,12 +39,12 @@ stitched_generate_plugin(
     TARGET stitched_FWCore_IntegrationPlugins
     SOURCES ${PLUGIN_SOURCES}
     LINK_LIBRARIES
-                stitched_FWCore_Integration
-                stitched_FWCore_Sources
-                stitched_FWCore_Framework
-                stitched_DataFormats_TestObjects
-                stitched_DataFormats_Provenance
-                stitched_FWCore_SharedMemory
+                Stitched::FWCore_Integration
+                Stitched::FWCore_Sources
+                Stitched::FWCore_Framework
+                Stitched::DataFormats_TestObjects
+                Stitched::DataFormats_Provenance
+                Stitched::FWCore_SharedMemory
                 ROOT::Hist
                 ROOT::Core
 )

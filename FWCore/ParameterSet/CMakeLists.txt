@@ -4,6 +4,7 @@ file(GLOB HEADERS "interface/*.h" "templates/*.py")
 
 
 add_library(stitched_FWCore_ParameterSet SHARED ${SOURCES})
+add_library(Stitched::FWCore_ParameterSet ALIAS stitched_FWCore_ParameterSet)
 
 target_include_directories(stitched_FWCore_ParameterSet
     PUBLIC
@@ -20,10 +21,10 @@ target_sources(stitched_FWCore_ParameterSet
 
 target_link_libraries(stitched_FWCore_ParameterSet
     PUBLIC
-        stitched_FWCore_PluginManager
-        stitched_FWCore_MessageLogger
-        stitched_DataFormats_Provenance
-        stitched_FWCore_Utilities
+        Stitched::FWCore_PluginManager
+        Stitched::FWCore_MessageLogger
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_Utilities
         Boost::boost
         TBB::tbb
     PRIVATE

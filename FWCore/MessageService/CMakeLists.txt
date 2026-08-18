@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_MessageService SHARED ${SOURCES})
+add_library(Stitched::FWCore_MessageService ALIAS stitched_FWCore_MessageService)
 
 target_include_directories(stitched_FWCore_MessageService
     PUBLIC
@@ -19,10 +20,10 @@ target_sources(stitched_FWCore_MessageService
 
 target_link_libraries(stitched_FWCore_MessageService
     PUBLIC
-        stitched_FWCore_MessageLogger
-        stitched_FWCore_ParameterSet
-        stitched_FWCore_ServiceRegistry
-        stitched_FWCore_Utilities
+        Stitched::FWCore_MessageLogger
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_ServiceRegistry
+        Stitched::FWCore_Utilities
         Threads::Threads
 )
 
@@ -37,6 +38,6 @@ stitched_generate_plugin(
     TARGET stitched_FWCore_MessageServicePlugins
     SOURCES ${PLUGIN_SOURCES}
     LINK_LIBRARIES
-                stitched_FWCore_MessageService
-                stitched_FWCore_Framework
+                Stitched::FWCore_MessageService
+                Stitched::FWCore_Framework
 )
