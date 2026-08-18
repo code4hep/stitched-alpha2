@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_Version SHARED ${SOURCES})
+add_library(Stitched::FWCore_Version ALIAS stitched_FWCore_Version)
 
 target_include_directories(stitched_FWCore_Version
     PUBLIC

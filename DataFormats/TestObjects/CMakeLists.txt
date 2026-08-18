@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_DataFormats_TestObjects SHARED ${SOURCES})
+add_library(Stitched::DataFormats_TestObjects ALIAS stitched_DataFormats_TestObjects)
 
 target_include_directories(stitched_DataFormats_TestObjects
     PUBLIC
@@ -27,9 +28,9 @@ target_sources(stitched_DataFormats_TestObjects
 
 target_link_libraries(stitched_DataFormats_TestObjects
     PUBLIC
-        stitched_DataFormats_Common
-        stitched_DataFormats_Provenance
-        stitched_FWCore_Utilities
+        Stitched::DataFormats_Common
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_Utilities
         ROOT::Core
 )
 

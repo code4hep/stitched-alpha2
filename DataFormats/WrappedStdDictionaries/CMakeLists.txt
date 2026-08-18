@@ -2,6 +2,7 @@
 # This package contains ROOT dictionary definitions
 
 add_library(stitched_DataFormats_WrappedStdDictionaries SHARED)
+add_library(Stitched::DataFormats_WrappedStdDictionaries ALIAS stitched_DataFormats_WrappedStdDictionaries)
 
 # Generate dictionary
 set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> )
@@ -15,7 +16,7 @@ stitched_generate_dictionary(stitched_DataFormats_WrappedStdDictionaries_dict
 
 target_link_libraries(stitched_DataFormats_WrappedStdDictionaries
     PUBLIC
-        stitched_DataFormats_Common
+        Stitched::DataFormats_Common
         ROOT::Core
 )
 

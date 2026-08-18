@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h  interface/*.icc)
 
 add_library(stitched_FWCore_MessageLogger SHARED ${SOURCES})
+add_library(Stitched::FWCore_MessageLogger ALIAS stitched_FWCore_MessageLogger)
 
 target_include_directories(stitched_FWCore_MessageLogger
     PUBLIC
@@ -19,8 +20,8 @@ target_sources(stitched_FWCore_MessageLogger
 
 target_link_libraries(stitched_FWCore_MessageLogger
     PUBLIC
-        stitched_DataFormats_Provenance
-        stitched_FWCore_Utilities
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_Utilities
         Boost::boost
         Threads::Threads
     PRIVATE

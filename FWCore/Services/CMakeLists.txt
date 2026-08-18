@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_Services SHARED ${SOURCES})
+add_library(Stitched::FWCore_Services ALIAS stitched_FWCore_Services)
 
 target_sources(stitched_FWCore_Services
     PUBLIC
@@ -13,9 +14,9 @@ target_sources(stitched_FWCore_Services
 
 target_link_libraries(stitched_FWCore_Services
     PUBLIC
-        stitched_FWCore_MessageLogger
-        stitched_FWCore_ParameterSet
-        stitched_FWCore_ServiceRegistry
+        Stitched::FWCore_MessageLogger
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_ServiceRegistry
 )
 
 set_target_properties(stitched_FWCore_Services PROPERTIES
@@ -29,11 +30,11 @@ stitched_generate_plugin(
     TARGET stitched_FWCore_ServicesPlugins
     SOURCES ${PLUGIN_SOURCES}
     LINK_LIBRARIES
-                stitched_FWCore_Services
-                stitched_FWCore_Framework
-                stitched_FWCore_AbstractServices
-                stitched_DataFormats_Provenance
-                stitched_FWCore_Utilities
+                Stitched::FWCore_Services
+                Stitched::FWCore_Framework
+                Stitched::FWCore_AbstractServices
+                Stitched::DataFormats_Provenance
+                Stitched::FWCore_Utilities
                 Boost::boost
                 CpuFeatures::cpu_features
                 ROOT::Tree

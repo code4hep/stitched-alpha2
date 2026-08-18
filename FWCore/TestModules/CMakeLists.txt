@@ -6,11 +6,11 @@ stitched_generate_plugin(
     TARGET stitched_FWCore_TestModulesPlugins
     SOURCES ${PLUGIN_SOURCES}
     LINK_LIBRARIES
-        stitched_FWCore_Framework
-        stitched_DataFormats_Provenance
-        stitched_FWCore_AbstractServices
-        stitched_FWCore_PluginManager
-        stitched_FWCore_Sources
-        stitched_FWCore_ParameterSet
-        stitched_FWCore_Utilities
+        Stitched::FWCore_Framework
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_AbstractServices
+        Stitched::FWCore_PluginManager
+        Stitched::FWCore_Sources
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_Utilities
 )

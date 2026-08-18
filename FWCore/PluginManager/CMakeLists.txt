@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_PluginManager SHARED ${SOURCES})
+add_library(Stitched::FWCore_PluginManager ALIAS stitched_FWCore_PluginManager)
 
 target_include_directories(stitched_FWCore_PluginManager
     PUBLIC
@@ -19,7 +20,7 @@ target_sources(stitched_FWCore_PluginManager
 
 target_link_libraries(stitched_FWCore_PluginManager
     PUBLIC
-        stitched_FWCore_Utilities
+        Stitched::FWCore_Utilities
         ${CMAKE_DL_LIBS}
         ROOT::Core
 )

@@ -2,6 +2,7 @@
 # This package contains ROOT dictionary definitions
 
 add_library(stitched_DataFormats_StdDictionaries_map SHARED)
+add_library(Stitched::DataFormats_StdDictionaries_map ALIAS stitched_DataFormats_StdDictionaries_map)
 # Generate dictionary
 stitched_generate_dictionary(stitched_DataFormats_StdDictionaries_map_dict
     src/classes_map.h
@@ -19,6 +20,7 @@ set_target_properties(stitched_DataFormats_StdDictionaries_map PROPERTIES
 )
 
 add_library(stitched_DataFormats_StdDictionaries_others SHARED)
+add_library(Stitched::DataFormats_StdDictionaries_others ALIAS stitched_DataFormats_StdDictionaries_others)
 # Generate dictionary
 stitched_generate_dictionary(stitched_DataFormats_StdDictionaries_others_dict
     src/classes_others.h
@@ -36,6 +38,7 @@ set_target_properties(stitched_DataFormats_StdDictionaries_others PROPERTIES
     EXPORT_NAME DataFormats_StdDictionaries_others
 )
 add_library(stitched_DataFormats_StdDictionaries_pair SHARED)
+add_library(Stitched::DataFormats_StdDictionaries_pair ALIAS stitched_DataFormats_StdDictionaries_pair)
 # Generate dictionary
 stitched_generate_dictionary(stitched_DataFormats_StdDictionaries_pair_dict
     src/classes_pair.h
@@ -53,6 +56,7 @@ set_target_properties(stitched_DataFormats_StdDictionaries_pair PROPERTIES
     EXPORT_NAME DataFormats_StdDictionaries_pair
 )
 add_library(stitched_DataFormats_StdDictionaries_vector SHARED)
+add_library(Stitched::DataFormats_StdDictionaries_vector ALIAS stitched_DataFormats_StdDictionaries_vector)
 # Generate dictionary
 stitched_generate_dictionary(stitched_DataFormats_StdDictionaries_vector_dict
     src/classes_vector.h

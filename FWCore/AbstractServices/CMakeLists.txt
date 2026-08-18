@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_AbstractServices SHARED ${SOURCES})
+add_library(Stitched::FWCore_AbstractServices ALIAS stitched_FWCore_AbstractServices)
 
 target_include_directories(stitched_FWCore_AbstractServices
     PUBLIC

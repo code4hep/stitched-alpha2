@@ -2,6 +2,7 @@
 file(GLOB SOURCES src/*.cc)
 
 add_library(stitched_FWCore_ParameterSetReader SHARED ${SOURCES})
+add_library(Stitched::FWCore_ParameterSetReader ALIAS stitched_FWCore_ParameterSetReader)
 
 #can't use target_sources as headers needed for other targets in this project
 target_include_directories(stitched_FWCore_ParameterSetReader
@@ -12,9 +13,9 @@ target_include_directories(stitched_FWCore_ParameterSetReader
 
 target_link_libraries(stitched_FWCore_ParameterSetReader
     PUBLIC
-        stitched_FWCore_ParameterSet
-        stitched_FWCore_Utilities
-        stitched_FWCore_PythonParameterSet
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_Utilities
+        Stitched::FWCore_PythonParameterSet
         Python3::Python
 )
 

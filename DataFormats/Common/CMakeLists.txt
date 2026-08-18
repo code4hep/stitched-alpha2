@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h interface/*.icc)
 
 add_library(stitched_DataFormats_Common SHARED ${SOURCES})
+add_library(Stitched::DataFormats_Common ALIAS stitched_DataFormats_Common)
 
 target_include_directories(stitched_DataFormats_Common
     PUBLIC
@@ -29,9 +30,9 @@ target_sources(stitched_DataFormats_Common
 
 target_link_libraries(stitched_DataFormats_Common
     PUBLIC
-        stitched_DataFormats_Provenance
-        stitched_FWCore_MessageLogger
-        stitched_FWCore_Utilities
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_MessageLogger
+        Stitched::FWCore_Utilities
         Boost::boost
         TBB::tbb
         ROOT::Core

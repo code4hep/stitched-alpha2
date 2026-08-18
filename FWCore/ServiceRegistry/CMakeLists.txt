@@ -3,6 +3,7 @@ file(GLOB SOURCES src/*.cc)
 file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_ServiceRegistry SHARED ${SOURCES})
+add_library(Stitched::FWCore_ServiceRegistry ALIAS stitched_FWCore_ServiceRegistry)
 
 target_include_directories(stitched_FWCore_ServiceRegistry
     PUBLIC
@@ -19,12 +20,12 @@ target_sources(stitched_FWCore_ServiceRegistry
 
 target_link_libraries(stitched_FWCore_ServiceRegistry
     PUBLIC
-        stitched_FWCore_AbstractServices
-        stitched_DataFormats_Provenance
-        stitched_FWCore_ParameterSet
-        stitched_FWCore_MessageLogger
-        stitched_FWCore_PluginManager
-        stitched_FWCore_Utilities
+        Stitched::FWCore_AbstractServices
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_MessageLogger
+        Stitched::FWCore_PluginManager
+        Stitched::FWCore_Utilities
         Boost::boost
         TBB::tbb
 )
