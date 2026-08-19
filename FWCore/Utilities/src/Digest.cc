@@ -5,6 +5,8 @@
 #include "FWCore/Utilities/interface/EDMException.h"
 #include "FWCore/Utilities/interface/Digest.h"
 
+using namespace edm_md5;
+
 namespace cms {
   namespace {
     MD5Result const& invalidResult() {
