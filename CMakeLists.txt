@@ -142,29 +142,7 @@ foreach(target ${Stitched_EXPORT_TARGETS})
     endif()
 endforeach()
 
-# Plugin libraries are dlopen-loaded at runtime via edmplugin::PluginManager /
-# .edmplugincache and are never referenced via target_link_libraries by another
-# CMake target, so they are not part of the Stitched:: export set. They are
-# still built and installed as regular (non-exported) shared libraries; they
-# have no public headers today, so a plain install(TARGETS) (no EXPORT, no
-# FILE_SET) is sufficient.
-set(Stitched_PLUGIN_TARGETS
-    stitched_FWCore_ModulesPlugins
-    stitched_FWCore_IntegrationPlugins
-    stitched_FWCore_MessageServicePlugins
-    stitched_FWCore_ServicesPlugins
-    stitched_FWCore_TestModulesPlugins
-)
-
-foreach(target ${Stitched_PLUGIN_TARGETS})
-    if(TARGET ${target})
-        install(TARGETS ${target}
-            LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-            ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
-            RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-        )
-    endif()
-endforeach()
+# Note that plugin libraries are installed directly by stitched_generate_plugin()
 
 # Install executables
 set(Stitched_EXECUTABLES
