@@ -27,8 +27,6 @@ target_link_libraries(stitched_FWCore_ParameterSet
         Stitched::FWCore_Utilities
         Boost::boost
         TBB::tbb
-    PRIVATE
-        Python3::Python
 )
 
 set_target_properties(stitched_FWCore_ParameterSet PROPERTIES

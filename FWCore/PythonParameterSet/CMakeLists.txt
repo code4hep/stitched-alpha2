@@ -17,7 +17,9 @@ target_include_directories(stitched_FWCore_PythonParameterSet
 
 target_link_libraries(stitched_FWCore_PythonParameterSet
     PUBLIC
+        Stitched::DataFormats_Provenance
         Stitched::FWCore_ParameterSet
+        Stitched::FWCore_Utilities
         Python3::Python
         pybind11::pybind11
 )
