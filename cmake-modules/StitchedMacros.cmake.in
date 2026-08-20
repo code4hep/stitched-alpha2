@@ -80,6 +80,8 @@ Generate a Stitched EDM plugin library with automatic configuration generation.
     - Set up include directories for build and install interfaces
     - Link against specified libraries
     - Install the plugin library itself
+    - Register the plugin for automatic project-wide plugin cache generation
+      (see ``stitched_generate_plugincache``)
     - Run edmWriteConfigs to generate Python configurations
     - Copy and install any Python files from the python/ subdirectory
 
@@ -144,6 +146,36 @@ function(stitched_generate_plugin)
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
+
+    # Register this plugin target globally so the project's plugin cache can be
+    # generated automatically once all plugins have been configured (see
+    # stitched_generate_plugincache() and the deferred call below).
+    set_property(GLOBAL APPEND PROPERTY STITCHED_PLUGIN_TARGETS ${PLUGIN_TARGET})
+
+    # Schedule automatic plugin cache generation, once per top-level project.
+    # cmake_language(DEFER) runs the call at the end of processing
+    # CMAKE_SOURCE_DIR, i.e. after every add_subdirectory() anywhere in the
+    # consumer's (or Stitched's own) source tree has finished configuring, so
+    # every plugin registered above via STITCHED_PLUGIN_TARGETS is guaranteed to
+    # be known by the time _stitched_run_plugincache() executes. A GLOBAL
+    # property guard ensures this is scheduled only once even though this
+    # function may be called many times.
+    #
+    # NOTE: also snapshot the current (build-tree) value of
+    # STITCHED_EXECUTABLES_DIR into a GLOBAL property here. Some top-level
+    # CMakeLists.txt files (including Stitched's own) reassign this variable
+    # later on (e.g. to the install-tree path, when generating an
+    # install-tree copy of StitchedMacros.cmake). The deferred call
+    # only fires after the entire top-level CMakeLists.txt body has been
+    # processed, _stitched_run_plugincache() would otherwise risk to read
+    # the later reassigned value.
+    get_property(_stitched_plugincache_scheduled GLOBAL PROPERTY STITCHED_PLUGINCACHE_SCHEDULED)
+    if(NOT _stitched_plugincache_scheduled)
+        set_property(GLOBAL PROPERTY STITCHED_PLUGINCACHE_SCHEDULED TRUE)
+        set_property(GLOBAL PROPERTY STITCHED_PLUGINCACHE_EXECUTABLES_DIR "${STITCHED_EXECUTABLES_DIR}")
+        cmake_language(DEFER DIRECTORY ${CMAKE_SOURCE_DIR} CALL _stitched_run_plugincache)
+    endif()
+    unset(_stitched_plugincache_scheduled)
 
     # If edmWriteConfigs is a target (building Stitched), add it as a dependency
     # to ensure it's built before we try to run it
@@ -213,6 +245,16 @@ Generate the .edmplugincache file for Stitched EDM plugin libraries.
   Creates a custom command that runs edmPluginRefresh on all specified plugin
   targets to generate the .edmplugincache file, and installs the cache file.
 
+  Note that this function is normally invoked automatically (once per project) by
+  ``stitched_generate_plugin()`` (via the internal ``_stitched_run_plugincache``
+  trampoline). Calling it manually will produce a CMake configure-time
+  error due to duplicate call.
+
+  Its ``OUTPUT_DIR`` and ``CACHE_TARGET_NAME`` parameters remain
+  documented below and still valid for manual use outside the
+  automatic flow, should that ever be needed, but they are not
+  currently exposed when called from ``stitched_generate_plugin()``
+
   Arguments:
     ``PLUGIN_TARGETS``
       List of plugin target names to include in the cache.
@@ -243,6 +285,23 @@ Generate the .edmplugincache file for Stitched EDM plugin libraries.
       )
 
 #]=======================================================================]
+
+# Internal helper: reads all plugin targets registered via
+# stitched_generate_plugin() and triggers the actual cache generation.
+# Not intended to be called directly by consumers.
+function(_stitched_run_plugincache)
+    get_property(_stitched_all_plugin_targets GLOBAL PROPERTY STITCHED_PLUGIN_TARGETS)
+
+    # Restore STITCHED_EXECUTABLES_DIR to the value captured when the
+    # deferred call was scheduled (see stitched_generate_plugin()), in case
+    # the top-level CMakeLists.txt reassigned it afterwards (e.g. to the
+    # install-tree path) before this deferred call fires.
+    get_property(_stitched_executables_dir GLOBAL PROPERTY STITCHED_PLUGINCACHE_EXECUTABLES_DIR)
+    set(STITCHED_EXECUTABLES_DIR "${_stitched_executables_dir}")
+
+    stitched_generate_plugincache(PLUGIN_TARGETS ${_stitched_all_plugin_targets})
+endfunction()
+
 function(stitched_generate_plugincache)
     # Parse arguments
     set(options "")

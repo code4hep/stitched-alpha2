@@ -66,16 +66,6 @@ add_link_options(LINKER:-z,defs)
 add_subdirectory(DataFormats)
 add_subdirectory(FWCore)
 
-# Generate plugin cache for all plugin libraries
-stitched_generate_plugincache(
-    PLUGIN_TARGETS
-        stitched_FWCore_ModulesPlugins
-        stitched_FWCore_IntegrationPlugins
-        stitched_FWCore_MessageServicePlugins
-        stitched_FWCore_ServicesPlugins
-        stitched_FWCore_TestModulesPlugins
-)
-
 # Configure environment setup scripts
 include(ConfigureEnvironmentScripts)
 
