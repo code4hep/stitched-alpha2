@@ -79,8 +79,15 @@ Generate a Stitched EDM plugin library with automatic configuration generation.
     - Create a shared library with the "edmplugin" prefix
     - Set up include directories for build and install interfaces
     - Link against specified libraries
+    - Install the plugin library itself
     - Run edmWriteConfigs to generate Python configurations
     - Copy and install any Python files from the python/ subdirectory
+
+  Note that the plugin libraries are dlopen-loaded at runtime via
+  edmplugin::PluginManager and should never be referenced via
+  target_link_libraries by another CMake target, so they are not part
+  of the Stitched:: export set. They are built and installed as
+  regular (non-exported) shared libraries.
 
   Example:
     ::
@@ -130,7 +137,14 @@ function(stitched_generate_plugin)
 
     # Set the plugin prefix
     set_target_properties(${PLUGIN_TARGET} PROPERTIES PREFIX "edmplugin")
-    
+
+    # Install the plugin library itself (no EXPORT or FILE_SET)
+    install(TARGETS ${PLUGIN_TARGET}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+
     # If edmWriteConfigs is a target (building Stitched), add it as a dependency
     # to ensure it's built before we try to run it
     if(TARGET edmWriteConfigs)
