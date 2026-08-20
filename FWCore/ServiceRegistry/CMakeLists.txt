@@ -20,14 +20,12 @@ target_sources(stitched_FWCore_ServiceRegistry
 
 target_link_libraries(stitched_FWCore_ServiceRegistry
     PUBLIC
-        Stitched::FWCore_AbstractServices
         Stitched::DataFormats_Provenance
-        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_AbstractServices
         Stitched::FWCore_MessageLogger
+        Stitched::FWCore_ParameterSet
         Stitched::FWCore_PluginManager
         Stitched::FWCore_Utilities
-        Boost::boost
-        TBB::tbb
 )
 
 set_target_properties(stitched_FWCore_ServiceRegistry PROPERTIES

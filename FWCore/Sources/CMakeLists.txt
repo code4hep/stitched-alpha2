@@ -20,8 +20,15 @@ target_sources(stitched_FWCore_Sources
 
 target_link_libraries(stitched_FWCore_Sources
     PUBLIC
+        Stitched::DataFormats_Common
+        Stitched::DataFormats_Provenance
         Stitched::FWCore_Framework
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_PluginManager
+        Stitched::FWCore_Reflection
         Stitched::FWCore_Utilities
+        Stitched::FWCore_Version
+        TBB::tbb
 )
 
 set_target_properties(stitched_FWCore_Sources PROPERTIES

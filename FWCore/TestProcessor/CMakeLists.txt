@@ -20,9 +20,17 @@ target_sources(stitched_FWCore_TestProcessor
 
 target_link_libraries(stitched_FWCore_TestProcessor
     PUBLIC
+        Stitched::DataFormats_Common
+        Stitched::DataFormats_Provenance
+        Stitched::FWCore_Concurrency
         Stitched::FWCore_Framework
-        Stitched::FWCore_ServiceRegistry
         Stitched::FWCore_PythonParameterSet
+        Stitched::FWCore_ServiceRegistry
+        Stitched::FWCore_Utilities
+    PRIVATE
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_ParameterSetReader
+        Stitched::FWCore_PluginManager
 )
 
 set_target_properties(stitched_FWCore_TestProcessor PROPERTIES

@@ -14,9 +14,7 @@ target_include_directories(stitched_FWCore_ParameterSetReader
 target_link_libraries(stitched_FWCore_ParameterSetReader
     PUBLIC
         Stitched::FWCore_ParameterSet
-        Stitched::FWCore_Utilities
         Stitched::FWCore_PythonParameterSet
-        Python3::Python
 )
 
 set_target_properties(stitched_FWCore_ParameterSetReader PROPERTIES

@@ -30,10 +30,10 @@ stitched_generate_plugin(
     TARGET stitched_FWCore_ServicesPlugins
     SOURCES ${PLUGIN_SOURCES}
     LINK_LIBRARIES
-                Stitched::FWCore_Services
-                Stitched::FWCore_Framework
-                Stitched::FWCore_AbstractServices
                 Stitched::DataFormats_Provenance
+                Stitched::FWCore_AbstractServices
+                Stitched::FWCore_Framework
+                Stitched::FWCore_Services
                 Stitched::FWCore_Utilities
                 Boost::boost
                 CpuFeatures::cpu_features

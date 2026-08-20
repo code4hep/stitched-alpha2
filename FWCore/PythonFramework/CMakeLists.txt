@@ -17,9 +17,17 @@ target_include_directories(stitched_FWCore_PythonFramework
 
 target_link_libraries(stitched_FWCore_PythonFramework
     PRIVATE
+        Stitched::FWCore_Concurrency
         Stitched::FWCore_Framework
+        Stitched::FWCore_MessageLogger
+        Stitched::FWCore_ParameterSet
+        Stitched::FWCore_PluginManager
+        Stitched::FWCore_ServiceRegistry
         Stitched::FWCore_PythonParameterSet
+        Stitched::FWCore_Utilities
         Python3::Python
+        pybind11::pybind11
+        TBB::tbb
 )
 
 set_target_properties(stitched_FWCore_PythonFramework PROPERTIES
