@@ -154,12 +154,9 @@ endforeach()
 
 # Note: Header files are now installed via target_sources FILE_SET in individual CMakeLists.txt files
 
-# install python
-# Note: DESTINATION must be relative to the install prefix (not the absolute
-# ${CMAKE_INSTALL_PREFIX}) so that `cmake --install --prefix <dir>` overrides
-# are honored correctly at install time.
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/python
-        DESTINATION .)
+# Note: Python configuration is staged and installed per-package by
+# stitched_install_python() / stitched_generate_plugin() (see
+# cmake-modules/StitchedMacros.cmake.in).
 
 # Export targets file
 install(EXPORT StitchedTargets

@@ -1,6 +1,10 @@
 # StitchedMacros.cmake
 # Utility functions for Stitched projects
 
+# Must be unconditional: this file is include()-d by consumers via
+# StitchedConfig.cmake, and GNUInstallDirs is idempotent.
+include(GNUInstallDirs)
+
 #[=======================================================================[.rst:
 stitched_generate_dictionary
 ----------------------------
@@ -41,6 +45,84 @@ endmacro()
 # This is configured at CMake time for build or install
 set(STITCHED_EXECUTABLES_DIR "@STITCHED_EXECUTABLES_DIR@")
 set(STITCHED_INCLUDES_DIR "@STITCHED_INCLUDES_DIR@")
+
+# Build-tree staging area and install destination for Stitched python
+# configuration. Both are part of the public consumer-facing API surface:
+# they let a consumer relocate the Python tree without knowing Stitched's
+# internal per-package layout.
+set(STITCHED_PYTHON_BUILD_DIR "${CMAKE_BINARY_DIR}/python"
+    CACHE PATH "Build-tree staging area for Stitched python configuration")
+set(STITCHED_INSTALL_PYTHONDIR "python"
+    CACHE PATH "Install destination, relative to the prefix, for python configuration")
+
+# Internal helper: computes the calling directory's package path (e.g.
+# "FWCore/Utilities"), relative to the top of the current project's source
+# tree. Note PROJECT_SOURCE_DIR, not CMAKE_SOURCE_DIR: the latter would break
+# if a consumer pulls Stitched or the example in via FetchContent/superbuild.
+function(_stitched_package_path OUTVAR)
+    file(RELATIVE_PATH _rel "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
+    set(${OUTVAR} "${_rel}" PARENT_SCOPE)
+endfunction()
+
+#[=======================================================================[.rst:
+stitched_install_python
+-----------------------
+
+Stage and install the hand-written Python configuration for the calling
+package.
+
+.. command:: stitched_install_python
+
+  ::
+
+    stitched_install_python()
+
+  Takes no arguments; operates on ``CMAKE_CURRENT_SOURCE_DIR``.
+
+  If a ``python/`` subdirectory exists next to the calling
+  ``CMakeLists.txt``, every ``.py`` file under it (recursively, so nested
+  directories such as ``python/test/`` are preserved) is staged into
+  ``${STITCHED_PYTHON_BUILD_DIR}/<Subsys>/<Pkg>/`` via
+  ``configure_file(COPYONLY)``, so that editing or adding a file refreshes
+  the build tree on the next build without a manual CMake re-run.
+
+  A single ``install(DIRECTORY ...)`` rule is then emitted for the staged
+  directory, guarded so it is only ever emitted once per directory (this is
+  what avoids a double-install for packages that both ship a ``python/``
+  directory and call ``stitched_generate_plugin()``, since the latter calls
+  this function internally too).
+
+  Caveat: a ``.py`` file deleted from the source tree lingers in the
+  build-tree stage (and therefore keeps being installed) until the build
+  directory is cleaned.
+
+#]=======================================================================]
+function(stitched_install_python)
+    _stitched_package_path(_pkg)
+    set(_stage "${STITCHED_PYTHON_BUILD_DIR}/${_pkg}")
+    file(MAKE_DIRECTORY "${_stage}")
+
+    if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/python")
+        file(GLOB_RECURSE _py CONFIGURE_DEPENDS RELATIVE
+             "${CMAKE_CURRENT_SOURCE_DIR}/python"
+             "${CMAKE_CURRENT_SOURCE_DIR}/python/*.py")
+        foreach(_f ${_py})
+            configure_file("${CMAKE_CURRENT_SOURCE_DIR}/python/${_f}"
+                           "${_stage}/${_f}" COPYONLY)
+        endforeach()
+        unset(_py)
+    endif()
+
+    get_directory_property(_install_rule_emitted STITCHED_PYTHON_INSTALL_RULE_EMITTED)
+    if(NOT _install_rule_emitted)
+        set_directory_properties(PROPERTIES STITCHED_PYTHON_INSTALL_RULE_EMITTED TRUE)
+        install(DIRECTORY "${_stage}/"
+                DESTINATION "${STITCHED_INSTALL_PYTHONDIR}/${_pkg}"
+                FILES_MATCHING PATTERN "*.py"
+                PATTERN "__pycache__" EXCLUDE)
+    endif()
+    unset(_install_rule_emitted)
+endfunction()
 
 #[=======================================================================[.rst:
 stitched_generate_plugin
@@ -83,7 +165,10 @@ Generate a Stitched EDM plugin library with automatic configuration generation.
     - Register the plugin for automatic project-wide plugin cache generation
       (see ``stitched_generate_plugincache``)
     - Run edmWriteConfigs to generate Python configurations
-    - Copy and install any Python files from the python/ subdirectory
+    - Stage the ``modules.py`` template alongside the generated configs
+    - Delegate staging and installing of any hand-written Python files (and
+      the single install rule for the whole staged directory) to
+      ``stitched_install_python()``
 
   Note that the plugin libraries are dlopen-loaded at runtime via
   edmplugin::PluginManager and should never be referenced via
@@ -125,7 +210,7 @@ function(stitched_generate_plugin)
     # Set up include directories
     target_include_directories(${PLUGIN_TARGET}
         PRIVATE
-            ${CMAKE_SOURCE_DIR}
+            ${PROJECT_SOURCE_DIR}
             ${PLUGIN_INCLUDE_DIRECTORIES}
     )
 
@@ -140,11 +225,12 @@ function(stitched_generate_plugin)
     # Set the plugin prefix
     set_target_properties(${PLUGIN_TARGET} PROPERTIES PREFIX "edmplugin")
 
-    # Install the plugin library itself (no EXPORT or FILE_SET)
+    # Install the plugin library itself (no EXPORT or FILE_SET).
+    # ARCHIVE/RUNTIME are dead: the target is always SHARED and never linked
+    # against. CMAKE_INSTALL_LIBDIR is guaranteed non-empty by the
+    # unconditional include(GNUInstallDirs) at the top of this file.
     install(TARGETS ${PLUGIN_TARGET}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
     # Register this plugin target globally so the project's plugin cache can be
@@ -183,47 +269,38 @@ function(stitched_generate_plugin)
         add_dependencies(${PLUGIN_TARGET} edmWriteConfigs)
     endif()
 
-    # Calculate relative Python path for this package
-    file(RELATIVE_PATH PKG_PYTHON_PATH ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+    # Calculate the package path and staging directory for this package
+    _stitched_package_path(_pkg)
+    set(_stage "${STITCHED_PYTHON_BUILD_DIR}/${_pkg}")
 
     # Ensure the Python output directory exists
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH})
+    file(MAKE_DIRECTORY "${_stage}")
 
     # Run edmWriteConfigs to generate Python configuration for this plugin library
     # The POST_BUILD command ensures this runs after the plugin is built
     add_custom_command(TARGET ${PLUGIN_TARGET} POST_BUILD
         COMMAND ${STITCHED_EXECUTABLES_DIR}/edmWriteConfigs -p $<TARGET_FILE:${PLUGIN_TARGET}>
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
+        WORKING_DIRECTORY "${_stage}"
         COMMENT "Generating Python configs for ${PLUGIN_TARGET}"
     )
 
-    # Copy and install Python files if they exist
-    if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/python)
-        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/python/
-             DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH}
-             PATTERN "__pycache__" EXCLUDE
-             PATTERN "*.pyc" EXCLUDE)
-        
-        # Install Python files
-        install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/python/
-                DESTINATION python/${PKG_PYTHON_PATH}
-                PATTERN "__pycache__" EXCLUDE
-                PATTERN "*.pyc" EXCLUDE)
-        
+    # Stage the modules.py template alongside the generated configs
+    set(_modules_py_template "${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py")
+    if(NOT EXISTS "${_modules_py_template}")
+        message(FATAL_ERROR
+            "stitched_generate_plugin: failed to find modules.py template at "
+            "${_modules_py_template} (STITCHED_INCLUDES_DIR=${STITCHED_INCLUDES_DIR})")
     endif()
-    # Also copy the modules.py template if available
-    if(EXISTS ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py)
-        file(COPY ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py
-                DESTINATION ${CMAKE_BINARY_DIR}/python/${PKG_PYTHON_PATH})
-    endif()
-    # Install modules.py template if available
-    if(EXISTS ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py)
-        install(FILES ${STITCHED_INCLUDES_DIR}/FWCore/ParameterSet/templates/modules.py
-                DESTINATION python/${PKG_PYTHON_PATH})
-    else()
-      message(FATAL_ERROR "failed to find ${STITCHED_INCLUDES_DIR}")
-    endif()
+    configure_file("${_modules_py_template}" "${_stage}/modules.py" COPYONLY)
+    unset(_modules_py_template)
 
+    # Stage and install any hand-written Python files, plus emit the single
+    # install rule for the whole staged directory (covers modules.py and the
+    # generated configs above too).
+    stitched_install_python()
+
+    unset(_pkg)
+    unset(_stage)
 endfunction()
 
 #[=======================================================================[.rst:
