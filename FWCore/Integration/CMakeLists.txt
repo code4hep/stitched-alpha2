@@ -20,12 +20,8 @@ target_sources(stitched_FWCore_Integration
 
 target_link_libraries(stitched_FWCore_Integration
     PUBLIC
-        Stitched::DataFormats_Common
-        Stitched::DataFormats_Provenance
         Stitched::FWCore_Framework
-        Stitched::FWCore_ParameterSet
         Stitched::FWCore_Utilities
-        CLHEP::CLHEP
 )
 
 set_target_properties(stitched_FWCore_Integration PROPERTIES
@@ -39,12 +35,20 @@ stitched_generate_plugin(
     TARGET stitched_FWCore_IntegrationPlugins
     SOURCES ${PLUGIN_SOURCES}
     LINK_LIBRARIES
-                Stitched::FWCore_Integration
-                Stitched::FWCore_Sources
-                Stitched::FWCore_Framework
-                Stitched::DataFormats_TestObjects
+                Stitched::DataFormats_Common
                 Stitched::DataFormats_Provenance
+                Stitched::DataFormats_TestObjects
+                Stitched::FWCore_AbstractServices
+                Stitched::FWCore_Concurrency
+                Stitched::FWCore_Framework
+                Stitched::FWCore_Integration
+                Stitched::FWCore_MessageLogger
+                Stitched::FWCore_ParameterSet
+                Stitched::FWCore_ServiceRegistry
                 Stitched::FWCore_SharedMemory
-                ROOT::Hist
+                Stitched::FWCore_Sources
+                Stitched::FWCore_Utilities
+                CLHEP::CLHEP
                 ROOT::Core
+                ROOT::Hist
 )
