@@ -5,12 +5,6 @@ file(GLOB HEADERS interface/*.h)
 add_library(stitched_FWCore_AbstractServices SHARED ${SOURCES})
 add_library(Stitched::FWCore_AbstractServices ALIAS stitched_FWCore_AbstractServices)
 
-target_include_directories(stitched_FWCore_AbstractServices
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
-
 target_sources(stitched_FWCore_AbstractServices
     PUBLIC
         FILE_SET HEADERS

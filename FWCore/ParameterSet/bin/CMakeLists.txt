@@ -3,11 +3,6 @@
 # edmPluginHelp executable
 add_executable(edmPluginHelp edmPluginHelp.cpp)
 
-target_include_directories(edmPluginHelp
-    PRIVATE
-        ${CMAKE_SOURCE_DIR}
-)
-
 target_link_libraries(edmPluginHelp
     PRIVATE
         Stitched::FWCore_ParameterSet
@@ -18,11 +13,6 @@ target_link_libraries(edmPluginHelp
 
 # edmWriteConfigs executable
 add_executable(edmWriteConfigs edmWriteConfigs.cpp)
-
-target_include_directories(edmWriteConfigs
-    PRIVATE
-        ${CMAKE_SOURCE_DIR}
-)
 
 target_link_libraries(edmWriteConfigs
     PRIVATE

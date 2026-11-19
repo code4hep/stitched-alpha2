@@ -9,13 +9,6 @@ endif()
 add_library(stitched_FWCore_PythonParameterSet SHARED ${SOURCES})
 add_library(Stitched::FWCore_PythonParameterSet ALIAS stitched_FWCore_PythonParameterSet)
 
-target_include_directories(stitched_FWCore_PythonParameterSet
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
 target_sources(stitched_FWCore_PythonParameterSet
     PUBLIC
         FILE_SET HEADERS

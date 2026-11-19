@@ -9,12 +9,6 @@ add_library(stitched_FWCore_PythonFramework SHARED ${SOURCES})
 add_library(Stitched::FWCore_PythonFramework ALIAS stitched_FWCore_PythonFramework)
 
 # The C++ header is private to the Python binding and intentionally not installed.
-target_include_directories(stitched_FWCore_PythonFramework
-    PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-)
-
 target_link_libraries(stitched_FWCore_PythonFramework
     PRIVATE
         Stitched::FWCore_Concurrency

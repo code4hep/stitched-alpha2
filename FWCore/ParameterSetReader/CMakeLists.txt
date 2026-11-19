@@ -5,13 +5,6 @@ file(GLOB HEADERS interface/*.h)
 add_library(stitched_FWCore_ParameterSetReader SHARED ${SOURCES})
 add_library(Stitched::FWCore_ParameterSetReader ALIAS stitched_FWCore_ParameterSetReader)
 
-target_include_directories(stitched_FWCore_ParameterSetReader
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
 target_sources(stitched_FWCore_ParameterSetReader
     PUBLIC
         FILE_SET HEADERS
