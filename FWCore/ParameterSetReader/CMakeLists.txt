@@ -1,14 +1,22 @@
 # FWCore/ParameterSetReader library
 file(GLOB SOURCES src/*.cc)
+file(GLOB HEADERS interface/*.h)
 
 add_library(stitched_FWCore_ParameterSetReader SHARED ${SOURCES})
 add_library(Stitched::FWCore_ParameterSetReader ALIAS stitched_FWCore_ParameterSetReader)
 
-#can't use target_sources as headers needed for other targets in this project
 target_include_directories(stitched_FWCore_ParameterSetReader
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+target_sources(stitched_FWCore_ParameterSetReader
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}
+        FILES ${HEADERS}
 )
 
 target_link_libraries(stitched_FWCore_ParameterSetReader

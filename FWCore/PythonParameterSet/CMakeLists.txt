@@ -1,5 +1,6 @@
 # FWCore/PythonParameterSet library
 file(GLOB SOURCES src/*.cc)
+file(GLOB HEADERS interface/*.h)
 
 if(NOT SOURCES)
     message(FATAL_ERROR "No source files found for stitched_FWCore_PythonParameterSet")
@@ -8,11 +9,18 @@ endif()
 add_library(stitched_FWCore_PythonParameterSet SHARED ${SOURCES})
 add_library(Stitched::FWCore_PythonParameterSet ALIAS stitched_FWCore_PythonParameterSet)
 
-#can't use target_sources as headers needed by other targets in this project
 target_include_directories(stitched_FWCore_PythonParameterSet
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface>
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+target_sources(stitched_FWCore_PythonParameterSet
+    PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS ${CMAKE_SOURCE_DIR}
+        FILES ${HEADERS}
 )
 
 target_link_libraries(stitched_FWCore_PythonParameterSet

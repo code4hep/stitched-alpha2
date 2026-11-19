@@ -30,6 +30,7 @@ target_link_libraries(stitched_DataFormats_TestObjects
     PUBLIC
         Stitched::DataFormats_Common
         Stitched::DataFormats_Provenance
+        Stitched::FWCore_SOA
         Stitched::FWCore_Utilities
         ROOT::Core
 )

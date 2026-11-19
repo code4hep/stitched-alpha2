@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.23...4.0)
 
 project(Stitched VERSION 1.0.0 LANGUAGES CXX)
 
+include(CTest)
+
 # Set default build type if not specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
@@ -69,6 +71,47 @@ add_subdirectory(FWCore)
 # Configure environment setup scripts
 include(ConfigureEnvironmentScripts)
 
+if(BUILD_TESTING)
+    # Run after a full build; the staged install updates install_manifest.txt.
+    set(STITCHED_HEADER_CHECK_CMAKE_ARGS "" CACHE STRING
+        "Additional CMake arguments for the installed header consumer test")
+    set(_header_check_args -G "${CMAKE_GENERATOR}")
+    if(CMAKE_GENERATOR_PLATFORM)
+        list(APPEND _header_check_args -A "${CMAKE_GENERATOR_PLATFORM}")
+    endif()
+    if(CMAKE_GENERATOR_TOOLSET)
+        list(APPEND _header_check_args -T "${CMAKE_GENERATOR_TOOLSET}")
+    endif()
+    foreach(_var IN ITEMS
+            CMAKE_CXX_COMPILER CMAKE_TOOLCHAIN_FILE CMAKE_PREFIX_PATH
+            CMAKE_SYSROOT CMAKE_CXX_COMPILER_TARGET CMAKE_GENERATOR_INSTANCE
+            CMAKE_MAKE_PROGRAM CMAKE_CXX_FLAGS CMAKE_EXE_LINKER_FLAGS
+            Boost_DIR TBB_DIR ROOT_DIR c4h_md5_DIR CLHEP_DIR pybind11_DIR
+            Python3_EXECUTABLE Python3_ROOT_DIR Python3_FIND_STRATEGY
+            Python_ROOT_DIR PYBIND11_FINDPYTHON)
+        if(DEFINED ${_var} AND NOT "${${_var}}" STREQUAL "" AND NOT "${${_var}}" MATCHES "-NOTFOUND$")
+            string(REPLACE ";" "\\;" _value "${${_var}}")
+            list(APPEND _header_check_args "-D${_var}=${_value}")
+        endif()
+    endforeach()
+    # pybind11 may use the legacy Python finder before Stitched finds Python3.
+    list(APPEND _header_check_args "-DPYTHON_EXECUTABLE=${Python3_EXECUTABLE}")
+    if(NOT CMAKE_CONFIGURATION_TYPES AND CMAKE_BUILD_TYPE)
+        list(APPEND _header_check_args "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
+    endif()
+    list(APPEND _header_check_args ${STITCHED_HEADER_CHECK_CMAKE_ARGS})
+    add_test(NAME installed_headers
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/check_header_installation.py"
+            --cmake "${CMAKE_COMMAND}" --config "$<CONFIG>" "${CMAKE_BINARY_DIR}"
+            -- ${_header_check_args}
+    )
+    set_tests_properties(installed_headers PROPERTIES
+        LABELS "installation;integration"
+        RESOURCE_LOCK stitched_install_manifest
+        TIMEOUT 600
+    )
+endif()
+
 # ============================================================================
 # Installation and package configuration
 # ============================================================================
@@ -82,12 +125,12 @@ set(BIN_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
 set(CONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/Stitched)
 
 # Install all targets with EXPORT
-# Note: This assumes all libraries are built as SHARED libraries
-# and should be exported together
+# Shared libraries and the header-only SOA target are exported together.
 
 # Get all library targets that were created
 set(Stitched_EXPORT_TARGETS
     # FWCore libraries
+    stitched_FWCore_SOA
     stitched_FWCore_Utilities
     stitched_FWCore_PluginManager
     stitched_FWCore_Reflection
@@ -201,4 +244,3 @@ message(STATUS "Stitched will be installed to: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "  Libraries: ${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}")
 message(STATUS "  Headers: ${CMAKE_INSTALL_PREFIX}/${INCLUDE_INSTALL_DIR}")
 message(STATUS "  CMake config: ${CMAKE_INSTALL_PREFIX}/${CONFIG_INSTALL_DIR}")
-
