@@ -5,12 +5,6 @@ file(GLOB HEADERS interface/*.h)
 add_library(stitched_FWCore_Concurrency SHARED ${SOURCES})
 add_library(Stitched::FWCore_Concurrency ALIAS stitched_FWCore_Concurrency)
 
-target_include_directories(stitched_FWCore_Concurrency
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
-
 target_sources(stitched_FWCore_Concurrency
     PUBLIC
         FILE_SET HEADERS

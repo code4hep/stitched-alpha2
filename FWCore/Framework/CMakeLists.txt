@@ -5,12 +5,6 @@ file(GLOB HEADERS interface/*.h interface/*.icc interface/*/*.h)
 add_library(stitched_FWCore_Framework SHARED ${SOURCES})
 add_library(Stitched::FWCore_Framework ALIAS stitched_FWCore_Framework)
 
-target_include_directories(stitched_FWCore_Framework
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
-
 target_sources(stitched_FWCore_Framework
     PUBLIC
         FILE_SET HEADERS
@@ -47,12 +41,6 @@ set_target_properties(stitched_FWCore_Framework PROPERTIES
 # Build cmsRun executable
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/bin/cmsRun.cpp)
     add_executable(cmsRun bin/cmsRun.cpp)
-    
-    target_include_directories(cmsRun
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/interface
-            ${CMAKE_SOURCE_DIR}
-    )
     
     target_link_libraries(cmsRun
         PRIVATE

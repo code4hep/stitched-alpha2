@@ -48,13 +48,14 @@ include("${Stitched_CMAKE_DIR}/StitchedMacros.cmake")
 set(Stitched_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
 set(Stitched_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
 
-# Provide a list of available libraries/components, using the exported
+# Provide a list of available libraries and header-only components, using the exported
 # Stitched:: target names (see StitchedTargets.cmake) so this list can be
 # passed directly to target_link_libraries() by consumers.
 # Note: Dictionary-only libraries are not included here because no
 # consumer should link against them. They are still exported as
 # targets (see StitchedTargets.cmake) for completeness.
 set(Stitched_LIBRARIES
+    Stitched::FWCore_SOA
     Stitched::FWCore_Utilities
     Stitched::FWCore_PluginManager
     Stitched::FWCore_Reflection

@@ -5,12 +5,6 @@ file(GLOB HEADERS interface/*.h interface/*.icc)
 add_library(stitched_FWCore_Utilities SHARED ${SOURCES})
 add_library(Stitched::FWCore_Utilities ALIAS stitched_FWCore_Utilities)
 
-target_include_directories(stitched_FWCore_Utilities
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
-
 # Associate headers with the target using FILE_SET
 target_sources(stitched_FWCore_Utilities
     PUBLIC

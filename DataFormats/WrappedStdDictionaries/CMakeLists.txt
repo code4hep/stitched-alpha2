@@ -5,7 +5,6 @@ add_library(stitched_DataFormats_WrappedStdDictionaries SHARED)
 add_library(Stitched::DataFormats_WrappedStdDictionaries ALIAS stitched_DataFormats_WrappedStdDictionaries)
 
 # Generate dictionary
-set_property(DIRECTORY PROPERTY INCLUDE_DIRECTORIES $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}> )
 stitched_generate_dictionary(stitched_DataFormats_WrappedStdDictionaries_dict
     ${CMAKE_CURRENT_SOURCE_DIR}/src/classes.h
     LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/src/classes_def.xml

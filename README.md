@@ -22,6 +22,18 @@ of extraction.
 The Stitched specific changes are in `main_<YYYY>_<MM>_<DD>` branches,
 where the date denotes the tag of CMSSW extraction.
 
+## Building
+
+Stitched uses CMake.
+
+## Tests
+
+The tests originating from CMSSW have not been enabled yet. Tests on the
+CMake setup can be run after the build with
+```sh
+ctest --test-dir /path/to/build -L installation --output-on-failure
+```
+
 ## Contributing
 
 Contributions to the framework code itself should be made to CMSSW itself.

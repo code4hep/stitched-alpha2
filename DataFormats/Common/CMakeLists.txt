@@ -5,12 +5,6 @@ file(GLOB HEADERS interface/*.h interface/*.icc)
 add_library(stitched_DataFormats_Common SHARED ${SOURCES})
 add_library(Stitched::DataFormats_Common ALIAS stitched_DataFormats_Common)
 
-target_include_directories(stitched_DataFormats_Common
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
-
 # Generate ROOT dictionary if classes_def.xml exists
 # Generate dictionary
 stitched_generate_dictionary(stitched_DataFormats_Common_dict
